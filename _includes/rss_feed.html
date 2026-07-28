@@ -17,6 +17,15 @@
     return doc.body.textContent || "";
   }
 
+  function isValidUrl(url) {
+    try {
+      const parsed = new URL(url, window.location.origin);
+      return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+    } catch (e) {
+      return false;
+    }
+  }
+
   fetch(feedUrl)
     .then(response => {
       if (!response.ok) throw new Error('Network response was not ok');
@@ -62,11 +71,16 @@
         const mediaContent = item.getElementsByTagNameNS("*", "content")[0] || item.getElementsByTagName("media:content")[0];
 
         if (mediaContent && mediaContent.getAttribute("url")) {
-          imageUrl = mediaContent.getAttribute("url");
+          const candidateUrl = mediaContent.getAttribute("url");
+          if (isValidUrl(candidateUrl)) {
+            imageUrl = candidateUrl;
+          }
         } else {
           // Try to find image in description before stripping HTML
           const imgMatch = rawDescription.match(/<img[^>]+src="([^">]+)"/);
-          if (imgMatch) imageUrl = imgMatch[1];
+          if (imgMatch && isValidUrl(imgMatch[1])) {
+            imageUrl = imgMatch[1];
+          }
         }
 
         // Clean description (strip HTML tags)
@@ -124,14 +138,18 @@
         cardBody.appendChild(cardText);
 
         if (link && link.trim() !== "") {
-          const actionBtn = document.createElement('a');
-          actionBtn.className = 'btn btn-outline-primary btn-sm mt-3 align-self-start';
-          actionBtn.style.borderRadius = '20px';
-          actionBtn.textContent = 'View Post';
-          actionBtn.href = link;
-          actionBtn.target = '_blank';
-          actionBtn.rel = 'noopener noreferrer';
-          cardBody.appendChild(actionBtn);
+          if (isValidUrl(link)) {
+            const actionBtn = document.createElement('a');
+            actionBtn.className = 'btn btn-outline-primary btn-sm mt-3 align-self-start';
+            actionBtn.style.borderRadius = '20px';
+            actionBtn.textContent = 'View Post';
+            actionBtn.href = link;
+            actionBtn.target = '_blank';
+            actionBtn.rel = 'noopener noreferrer';
+            cardBody.appendChild(actionBtn);
+          } else {
+            console.warn('Blocked invalid external link URL:', link);
+          }
         }
 
         card.appendChild(cardBody);
