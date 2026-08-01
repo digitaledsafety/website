@@ -1,12 +1,12 @@
 ---
 title: "BrightSpark Inc."
-homepage: https://www.brightspark.org
-donation_url: https://www.brightspark.org
+homepage: https://brightspark.org
+donation_url: https://brightspark.org/donate/
 image: /assets/img/header-bg.jpg
-tags: ["organization"]
+tags: ["Early Childhood", "Education", "Equity"]
 
 caption:
   thumbnail: /assets/img/header-bg.jpg
 ---
 
-Supporting STEM education and innovation.
+BrightSpark empowers underserved young children and their families by ensuring equitable access to high-quality, modern early STEM learning opportunities.

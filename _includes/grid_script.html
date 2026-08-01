@@ -1,0 +1,119 @@
+<script>
+  if (typeof debounce !== 'function') {
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
+    }
+  }
+
+  (function() {
+    const gridId = "{{ include.id | default: 'grid' }}";
+    const dataVarName = "{{ include.data_var | default: 'cardData' }}";
+
+    function filterAndSort() {
+      const gridData = window[dataVarName];
+      if (!gridData) return;
+
+      const searchEl = document.getElementById(gridId + '-search');
+      const filterEl = document.getElementById(gridId + '-filter');
+      const sortEl = document.getElementById(gridId + '-sort');
+
+      const searchTerm = searchEl ? searchEl.value.toLowerCase() : '';
+      const filterValue = filterEl ? filterEl.value : 'all';
+      const sortBy = sortEl ? sortEl.value : 'recent';
+
+      let filtered = gridData.filter(item => {
+        const matchesSearch = !searchTerm || (
+          (item.title && item.title.toLowerCase().includes(searchTerm)) ||
+          (item.subtitle && item.subtitle.toLowerCase().includes(searchTerm)) ||
+          (item.description && item.description.toLowerCase().includes(searchTerm)) ||
+          (item.excerpt && item.excerpt.toLowerCase().includes(searchTerm)) ||
+          (item.platform && item.platform.toLowerCase().includes(searchTerm)) ||
+          (item.service && item.service.toLowerCase().includes(searchTerm)) ||
+          (item.programTitle && item.programTitle.toLowerCase().includes(searchTerm)) ||
+          (Array.isArray(item.tags) ? item.tags.some(t => t && t.toLowerCase().includes(searchTerm)) : (item.tags && item.tags.toLowerCase().includes(searchTerm))) ||
+          (Array.isArray(item.categories) ? item.categories.some(c => c && c.toLowerCase().includes(searchTerm)) : (item.categories && item.categories.toLowerCase().includes(searchTerm))) ||
+          (Array.isArray(item.abbreviations) ? item.abbreviations.some(a => a && a.toLowerCase().includes(searchTerm)) : (item.abbreviations && item.abbreviations.toLowerCase().includes(searchTerm)))
+        );
+
+        const matchesFilter = filterValue === 'all' ||
+          (Array.isArray(item.tags) ? item.tags.includes(filterValue) : item.tags === filterValue) ||
+          (item.category === filterValue) ||
+          (Array.isArray(item.categories) ? item.categories.includes(filterValue) : item.categories === filterValue) ||
+          (item.service === filterValue);
+
+        return matchesSearch && matchesFilter;
+      });
+
+      if (sortBy === 'alpha') {
+        filtered.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+      } else {
+        filtered.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+      }
+
+      const noResultsMsg = document.getElementById(gridId + '-no-results');
+      const container = document.getElementById(gridId + '-container');
+
+      if (filtered.length === 0) {
+        if (noResultsMsg) noResultsMsg.style.display = 'block';
+        if (container) container.innerHTML = '';
+      } else {
+        if (noResultsMsg) noResultsMsg.style.display = 'none';
+        if (container && typeof renderGrid === 'function') {
+          renderGrid(filtered, container);
+        }
+      }
+    }
+
+    const searchInput = document.getElementById(gridId + '-search');
+    const filterSelect = document.getElementById(gridId + '-filter');
+    const sortSelect = document.getElementById(gridId + '-sort');
+    const clearBtn = document.getElementById(gridId + '-clear');
+
+    if (searchInput) searchInput.addEventListener('input', debounce(filterAndSort, 300));
+    if (filterSelect) filterSelect.addEventListener('change', filterAndSort);
+    if (sortSelect) sortSelect.addEventListener('change', filterAndSort);
+    if (clearBtn) clearBtn.addEventListener('click', function() {
+      if (searchInput) searchInput.value = '';
+      if (filterSelect) filterSelect.value = 'all';
+      if (sortSelect) sortSelect.value = 'recent';
+      filterAndSort();
+    });
+
+    // Handle initial filter from hash or window property
+    const hash = window.location.hash ? decodeURIComponent(window.location.hash.substring(1)) : null;
+    if (hash && filterSelect) {
+        for (let i = 0; i < filterSelect.options.length; i++) {
+            if (filterSelect.options[i].value === hash) {
+                filterSelect.value = hash;
+                break;
+            }
+        }
+    } else if (window.defaultFilter && filterSelect) {
+        filterSelect.value = window.defaultFilter;
+    }
+
+    // Initial render
+    filterAndSort();
+
+    window.addEventListener('hashchange', function() {
+        const newHash = decodeURIComponent(window.location.hash.substring(1));
+        if (newHash && filterSelect) {
+            for (let i = 0; i < filterSelect.options.length; i++) {
+                if (filterSelect.options[i].value === newHash) {
+                    filterSelect.value = newHash;
+                    filterAndSort();
+                    break;
+                }
+            }
+        }
+    });
+  })();
+</script>

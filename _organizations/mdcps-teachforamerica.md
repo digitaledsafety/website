@@ -1,12 +1,12 @@
 ---
-title: "MDCPS/ TeachforAmerica"
-homepage: https://www.teachforamerica.org/miami-dade
-donation_url: https://www.teachforamerica.org/miami-dade
+title: "M-DCPS & Teach For America"
+homepage: https://www.teachforamerica.org/miami
+donation_url: https://www.teachforamerica.org/donate
 image: /assets/img/header-bg.jpg
-tags: ["organization"]
+tags: ["Public Schools", "Teaching", "Equity"]
 
 caption:
   thumbnail: /assets/img/header-bg.jpg
 ---
 
-Supporting STEM education and innovation.
+M-DCPS and Teach For America empower underserved students in Miami by placing dedicated educators who deliver modern, high-impact STEM instruction in high-needs schools.

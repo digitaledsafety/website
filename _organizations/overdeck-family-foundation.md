@@ -3,10 +3,10 @@ title: "Overdeck Family Foundation"
 homepage: https://overdeck.org
 donation_url: https://overdeck.org
 image: /assets/img/header-bg.jpg
-tags: ["organization"]
+tags: ["Philanthropy", "Education", "K-12"]
 
 caption:
   thumbnail: /assets/img/header-bg.jpg
 ---
 
-Supporting STEM education and innovation.
+The Overdeck Family Foundation empowers underserved students by funding modern, data-driven educational initiatives that improve STEM outcomes from early childhood through high school.

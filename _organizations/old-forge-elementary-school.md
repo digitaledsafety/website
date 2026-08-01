@@ -1,12 +1,12 @@
 ---
-title: "Old Forge Elementary School"
-homepage: https://www.wasd.org/oldforge
-donation_url: https://www.wasd.org/oldforge
+title: "Old Forge Elementary"
+homepage: https://www.ofsd.k12.pa.us
+donation_url: https://www.ofsd.k12.pa.us
 image: /assets/img/header-bg.jpg
-tags: ["organization"]
+tags: ["Public School", "Elementary", "STEM Education"]
 
 caption:
   thumbnail: /assets/img/header-bg.jpg
 ---
 
-Supporting STEM education and innovation.
+Old Forge Elementary empowers underserved students by integrating modern STEM concepts into the foundational years of their education, fostering lifelong curiosity.

@@ -1,12 +1,12 @@
 ---
 title: "Hispanics for STEM"
-homepage: https://hispanicsforstem.org
-donation_url: https://hispanicsforstem.org
+homepage: https://www.hispanicsforstem.org
+donation_url: https://www.hispanicsforstem.org
 image: /assets/img/header-bg.jpg
-tags: ["organization"]
+tags: ["Hispanic Community", "Outreach", "Mentorship"]
 
 caption:
   thumbnail: /assets/img/header-bg.jpg
 ---
 
-Supporting STEM education and innovation.
+Hispanics for STEM empowers underserved Hispanic students by providing bilingual resources, role models, and modern STEM workshops that encourage pursuit of technical degrees.

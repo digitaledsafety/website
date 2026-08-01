@@ -3,10 +3,10 @@ title: "Brown Toy Box"
 homepage: https://browntoybox.com
 donation_url: https://browntoybox.com
 image: /assets/img/header-bg.jpg
-tags: ["organization"]
+tags: ["STEAM", "Representation", "Children"]
 
 caption:
   thumbnail: /assets/img/header-bg.jpg
 ---
 
-Supporting STEM education and innovation.
+Brown Toy Box empowers underserved children of color by creating modern STEAM toys and resources that provide cultural representation and spark interest in technical fields.

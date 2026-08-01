@@ -1,0 +1,39 @@
+---
+layout: default
+---
+{% include nav.html %}
+
+{% include mastheadpage.html %}
+
+<div class="container py-5" id="pagecontainer">
+  <div class="row">
+    <div class="col-md-8 mb-3">
+      {{ content }}
+    </div>
+
+    <div class="col-md-4 mb-3">
+      <div class="card grid-card-hover">
+        {% if page.caption.thumbnail %}
+        <img class="card-img-top img-fluid p-3" src="{{ page.caption.thumbnail }}" alt="{{ page.title }} logo">
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title">{{ page.title }}</h5>
+          {% if page.tags %}
+          <p class="card-subtitle mb-2 text-muted">{{ page.tags | join: ", " }}</p>
+          {% endif %}
+          <p class="card-text">Learn more about our partner and how you can support their mission.</p>
+          <div class="d-grid gap-2">
+            {% if page.homepage %}
+            <a href="{{ page.homepage }}" target="_blank" class="btn btn-outline-primary btn-block mb-2">Visit Website</a>
+            {% endif %}
+            {% if page.donation_url %}
+            <a href="{{ page.donation_url }}" target="_blank" class="btn btn-primary btn-block">Donate</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include contact.html %}

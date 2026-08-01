@@ -1,12 +1,12 @@
 ---
-title: "Pennsylvania Statewide STEM Ecosystem"
-homepage: https://pastemecosystem.org
-donation_url: https://pastemecosystem.org
+title: "PA Statewide STEM Ecosystem"
+homepage: https://pastem.org
+donation_url: https://pastem.org
 image: /assets/img/header-bg.jpg
-tags: ["organization"]
+tags: ["Ecosystem", "Pennsylvania", "Policy"]
 
 caption:
   thumbnail: /assets/img/header-bg.jpg
 ---
 
-Supporting STEM education and innovation.
+The PA Statewide STEM Ecosystem empowers underserved students in Pennsylvania by fostering a unified, modern approach to STEM education and workforce development.

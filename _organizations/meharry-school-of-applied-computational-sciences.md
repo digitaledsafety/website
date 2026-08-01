@@ -1,12 +1,12 @@
 ---
-title: "Meharry School of Applied Computational Sciences"
-homepage: https://meharry-comp-sci.org
-donation_url: https://meharry-comp-sci.org
+title: "Meharry SACS"
+homepage: https://sacs.mmc.edu
+donation_url: https://sacs.mmc.edu
 image: /assets/img/header-bg.jpg
-tags: ["organization"]
+tags: ["HBCU", "Data Science", "Computational Science"]
 
 caption:
   thumbnail: /assets/img/header-bg.jpg
 ---
 
-Supporting STEM education and innovation.
+Meharry empowers underserved students through its HBCU mission, providing advanced, modern computational science and data science degrees to foster diversity in technical research.

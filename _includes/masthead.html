@@ -1,33 +1,21 @@
 {% if site.locale and site.locale != "" and site.locale != nil %}
-<header class="masthead">
-  <div class="container">
-    <div class="intro-text">
-    {%- if site.data.sitetext[site.locale].header.title -%}
-      <div class="intro-lead-in">{{ site.data.sitetext[site.locale].header.title | markdownify }}</div>
-    {%- endif -%}
-    {%- if site.data.sitetext[site.locale].header.text -%}
-      <div class="intro-heading text-uppercase">{{ site.data.sitetext[site.locale].header.text | markdownify }}</div>
-    {%- endif -%}
-    {%- if site.data.sitetext[site.locale].header.button -%}
-      <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="{{ site.data.sitetext[site.locale].header.buttonlink }}">{{ site.data.sitetext[site.locale].header.button }}</a>
-    {%- endif -%}
-    </div>
-  </div>
-</header>
+  {% assign header_data = site.data.sitetext[site.locale].header %}
 {% else %}
+  {% assign header_data = site.data.sitetext.header %}
+{% endif %}
+
 <header class="masthead">
   <div class="container">
     <div class="intro-text">
-    {%- if site.data.sitetext.header.title -%}
-      <div class="intro-lead-in">{{ site.data.sitetext.header.title | markdownify }}</div>
+    {%- if header_data.title -%}
+      <div class="intro-lead-in">{{ header_data.title | markdownify }}</div>
     {%- endif -%}
-    {%- if site.data.sitetext.header.text -%}
-      <div class="intro-heading text-uppercase">{{ site.data.sitetext.header.text | markdownify }}</div>
+    {%- if header_data.text -%}
+      <div class="intro-heading text-uppercase">{{ header_data.text | markdownify }}</div>
     {%- endif -%}
-    {%- if site.data.sitetext.header.button -%}
-      <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="{{ site.data.sitetext.header.buttonlink }}">{{ site.data.sitetext.header.button }}</a>
+    {%- if header_data.button -%}
+      <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="{{ header_data.buttonlink }}">{{ header_data.button }}</a>
     {%- endif -%}
     </div>
   </div>
 </header>
-{% endif %}

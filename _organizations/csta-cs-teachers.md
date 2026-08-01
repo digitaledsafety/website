@@ -1,12 +1,12 @@
 ---
-title: "CSTA (CS Teachers)"
-homepage: https://csteachers.org
-donation_url: https://csteachers.org
+title: "CSTA"
+homepage: https://www.csteachers.org
+donation_url: https://www.csteachers.org
 image: /assets/img/header-bg.jpg
-tags: ["organization"]
+tags: ["Computer Science", "Teachers", "Professional Development"]
 
 caption:
   thumbnail: /assets/img/header-bg.jpg
 ---
 
-Supporting STEM education and innovation.
+CSTA empowers underserved students by supporting their teachers with the modern professional development and community needed to deliver high-quality computer science education.

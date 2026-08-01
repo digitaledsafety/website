@@ -1,12 +1,16 @@
 <!-- resources Grid -->
 {% if site.locale and site.locale != "" and site.locale != nil %}
+  {% assign resources_data = site.data.sitetext[site.locale].resources %}
+{% else %}
+  {% assign resources_data = site.data.sitetext.resources %}
+{% endif %}
 
-<section class="bg-light page-section" id="{{ site.data.sitetext.resources.section | default: "portfolio" }}">
+<section class="bg-light page-section" id="resource">
   <div class="container">
     <div class="row">
       <div class="col-lg-12 text-center">
-        <h2 class="section-heading text-uppercase">Learning Resources</h2>
-        <h3 class="section-subheading text-muted">A collection of STEM/STEAM Learning Resources</h3>
+        <h2 class="section-heading text-uppercase">{{ resources_data.title | markdownify | default: "Learning Resources" }}</h2>
+        <h3 class="section-subheading text-muted">{{ resources_data.text | markdownify | default: "A collection of STEM/STEAM Learning Resources" }}</h3>
       </div>
     </div>
     <div class="row">
@@ -18,7 +22,7 @@
               <i class="{{ site.data.style.portfolio-icon | default: "fas fa-plus fa-3x" }}"></i>
             </div>
           </div>
-          <img class="img-fluid" src="{{ resource.caption.thumbnail }}" alt="">
+          <img class="img-fluid" src="{{ resource.caption.thumbnail }}" alt="{{ resource.caption.title }}">
         </a>
         <div class="portfolio-caption">
           <h4>{{ resource.caption.title }}</h4>
@@ -28,32 +32,3 @@
     </div>
   </div>
 </section>
-{% else %}
-<section class="bg-light page-section" id="{{ site.data.sitetext.portfolio.section | default: "portfolio" }}">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-12 text-center">
-        <h2 class="section-heading text-uppercase">{{ site.data.sitetext.resource.title | markdownify | default: "resources" }}</h2>
-        <h3 class="section-subheading text-muted">{{ site.data.sitetext.resource.text | markdownify }}</h3>
-      </div>
-    </div>
-    <div class="row">
-	{% for resource in site.categories %}
-      <div class="col-md-4 col-sm-6 portfolio-item">
-        <a class="portfolio-link" href="{{ resource.id }}">
-          <div class="portfolio-hover">
-            <div class="portfolio-hover-content">
-              <i class="{{ site.data.style.portfolio-icon | default: "fas fa-plus fa-3x" }}"></i>
-            </div>
-          </div>
-          <img class="img-fluid" src="{{ resource.caption.thumbnail }}" alt="">
-        </a>
-        <div class="portfolio-caption">
-          <h4>{{ resource.caption.subtitle }}</h4>
-        </div>
-      </div>
-	{% endfor %}
-    </div>
-  </div>
-</section>
-{% endif %}

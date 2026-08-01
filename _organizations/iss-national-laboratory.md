@@ -3,10 +3,10 @@ title: "ISS National Laboratory"
 homepage: https://www.issnationallab.org
 donation_url: https://www.issnationallab.org
 image: /assets/img/header-bg.jpg
-tags: ["organization"]
+tags: ["Space", "Research", "STEM Education"]
 
 caption:
   thumbnail: /assets/img/header-bg.jpg
 ---
 
-Supporting STEM education and innovation.
+The ISS National Laboratory empowers underserved students by providing unique opportunities to conduct modern STEM research and experiments in the microgravity environment of space.

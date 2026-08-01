@@ -1,0 +1,15 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+    branches: ["main", "master"]
+  workflow_dispatch:
+  
+jobs:
+  call-jekyll-deployment:
+    uses: digitaledsafety/workflows/.github/workflows/reusable-jekyll-playwright-deploy.yml@main
+    with:
+      ruby-version: '3.2'
+      node-version: '20'

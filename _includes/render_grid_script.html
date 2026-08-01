@@ -1,0 +1,138 @@
+<script>
+/**
+ * Shared grid rendering function.
+ * @param {Array} data - The array of items to render.
+ * @param {HTMLElement} container - The container to inject cards into.
+ * @param {Object} options - Configuration for card rendering.
+ */
+function renderGridShared(data, container, options = {}) {
+    container.innerHTML = '';
+    const fragment = document.createDocumentFragment();
+
+    data.forEach(item => {
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('col-md-4', 'mb-4');
+        if (options.wrapperClass) {
+            options.wrapperClass.split(' ').forEach(cls => wrapper.classList.add(cls));
+        }
+        wrapper.setAttribute('role', 'listitem');
+
+        const card = document.createElement('div');
+        card.classList.add('card', 'h-100', 'shadow-sm', 'grid-card-hover');
+        if (options.cardClass) {
+            options.cardClass.split(' ').forEach(cls => card.classList.add(cls));
+        }
+        if (options.border === false) {
+            card.classList.add('border-0');
+        }
+        card.style.borderRadius = '15px';
+        card.style.overflow = 'hidden';
+
+        if (options.renderHeader) {
+            options.renderHeader(item, card);
+        }
+
+        // Image handling
+        const imageUrl = options.getImageUrl ? options.getImageUrl(item) : null;
+        if (imageUrl && !options.renderHeader) {
+            const imgLink = document.createElement('a');
+            imgLink.href = options.getLinkUrl ? options.getLinkUrl(item) : '#';
+            if (options.externalLinks) {
+                imgLink.target = '_blank';
+                imgLink.rel = 'noopener noreferrer';
+            }
+
+            const img = document.createElement('img');
+            img.classList.add('card-img-top', 'img-fluid');
+            img.src = imageUrl;
+            img.alt = item.title || '';
+            img.style.height = options.imageHeight || '180px';
+            img.style.objectFit = 'cover';
+
+            imgLink.appendChild(img);
+            card.appendChild(imgLink);
+        }
+
+        const body = document.createElement('div');
+        body.classList.add('card-body', 'd-flex', 'flex-column');
+        if (options.bodyClass) {
+            options.bodyClass.split(' ').forEach(cls => body.classList.add(cls));
+        }
+
+        if (options.renderBodyTop) {
+            options.renderBodyTop(item, body);
+        }
+
+        // Title
+        const titleLink = document.createElement('a');
+        titleLink.href = options.getLinkUrl ? options.getLinkUrl(item) : '#';
+        if (options.externalLinks) {
+            titleLink.target = '_blank';
+            titleLink.rel = 'noopener noreferrer';
+        }
+        titleLink.textContent = item.title;
+
+        if (!options.renderBodyTop) {
+            const title = document.createElement('h5');
+            title.classList.add('card-title', 'font-weight-bold');
+            title.appendChild(titleLink);
+            body.appendChild(title);
+        }
+
+        // Subtitle
+        const subtitleText = options.getSubtitle ? options.getSubtitle(item) : null;
+        if (subtitleText) {
+            const subtitle = document.createElement('p');
+            subtitle.classList.add('card-subtitle', 'mb-2', 'text-muted', 'small');
+            subtitle.textContent = subtitleText;
+            body.appendChild(subtitle);
+        }
+
+        // Description
+        const descText = options.getDescription ? options.getDescription(item) : null;
+        if (descText) {
+            const text = document.createElement('p');
+            text.classList.add('card-text', 'small');
+            if (options.mutedDescription) {
+                text.classList.add('text-muted');
+            }
+            text.textContent = descText;
+            body.appendChild(text);
+        }
+
+        if (options.renderBodyBottom) {
+            options.renderBodyBottom(item, body);
+        }
+
+        // Footer
+        const footer = document.createElement('div');
+        footer.classList.add('mt-auto');
+
+        if (options.renderFooter) {
+            options.renderFooter(item, footer);
+        } else if (options.stretchedLink) {
+            titleLink.classList.add('stretched-link');
+
+            if (options.viewDetailsText) {
+                const btn = document.createElement('a');
+                btn.href = titleLink.href;
+                if (options.externalLinks) {
+                    btn.target = '_blank';
+                    btn.rel = 'noopener noreferrer';
+                }
+                btn.classList.add('btn', 'btn-primary', 'btn-block', 'stretched-link');
+                btn.style.borderRadius = '20px';
+                btn.textContent = options.viewDetailsText;
+                footer.appendChild(btn);
+            }
+        }
+
+        body.appendChild(footer);
+        card.appendChild(body);
+        wrapper.appendChild(card);
+        fragment.appendChild(wrapper);
+    });
+
+    container.appendChild(fragment);
+}
+</script>
