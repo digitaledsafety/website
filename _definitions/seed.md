@@ -1,7 +1,5 @@
 ---
-tags: []
 title: Seed
-abbreviations: []
 links:
   - https://en.wikipedia.org/wiki/Random_seed
 ---
