@@ -30,6 +30,7 @@ header.masthead {
   }
   @media (min-width: 768px) {
     header.masthead {
+      background-attachment: fixed;
       .intro-text {
         padding-top: 300px;
         padding-bottom: 200px;

@@ -47,3 +47,26 @@ auth0.createAuth0Client({
       profileElement.style.display = "none";
     }
   });
+
+  // Masthead Parallax Effect
+  (function() {
+    const masthead = document.querySelector("header.masthead");
+    if (!masthead) return;
+
+    let isFixed = window.getComputedStyle(masthead).backgroundAttachment === 'fixed';
+
+    // Update isFixed on resize as it might change based on media queries
+    window.addEventListener('resize', () => {
+      isFixed = window.getComputedStyle(masthead).backgroundAttachment === 'fixed';
+    });
+
+    document.addEventListener("scroll", function() {
+      if (isFixed) return;
+
+      const scrollOffset = window.pageYOffset;
+      const speed = 0.5;
+      window.requestAnimationFrame(() => {
+        masthead.style.backgroundPositionY = (scrollOffset * speed) + "px";
+      });
+    }, { passive: true });
+  })();
