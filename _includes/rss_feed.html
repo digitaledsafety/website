@@ -124,14 +124,29 @@
         cardBody.appendChild(cardText);
 
         if (link && link.trim() !== "") {
-          const actionBtn = document.createElement('a');
-          actionBtn.className = 'btn btn-outline-primary btn-sm mt-3 align-self-start';
-          actionBtn.style.borderRadius = '20px';
-          actionBtn.textContent = 'View Post';
-          actionBtn.href = link;
-          actionBtn.target = '_blank';
-          actionBtn.rel = 'noopener noreferrer';
-          cardBody.appendChild(actionBtn);
+          let isSafeLink = false;
+          try {
+            const parsedUrl = new URL(link);
+            if (parsedUrl.protocol === "http:" || parsedUrl.protocol === "https:") {
+              isSafeLink = true;
+            }
+          } catch (e) {
+            // URL constructor failed, check if it starts with http:// or https:// manually as fallback
+            if (/^https?:\/\//i.test(link)) {
+              isSafeLink = true;
+            }
+          }
+
+          if (isSafeLink) {
+            const actionBtn = document.createElement('a');
+            actionBtn.className = 'btn btn-outline-primary btn-sm mt-3 align-self-start';
+            actionBtn.style.borderRadius = '20px';
+            actionBtn.textContent = 'View Post';
+            actionBtn.href = link;
+            actionBtn.target = '_blank';
+            actionBtn.rel = 'noopener noreferrer';
+            cardBody.appendChild(actionBtn);
+          }
         }
 
         card.appendChild(cardBody);
