@@ -12,9 +12,59 @@ layout: default
     {% endif %}
     <div class="intro-heading text-uppercase">Definitions</div>
     <h4 style="text-shadow: 0.5px 0.5px 3px black;">{{ content }}</h4>
+    <button id="share-button" class="btn btn-primary btn-xl text-uppercase mt-3" style="border-radius: 30px;">
+      <i class="fas fa-share-alt mr-2" aria-hidden="true"></i><span id="share-btn-text">{{ site.data.sitetext[site.locale].collection_ui.share | default: "Share" }}</span>
+    </button>
     </div>
   </div>
 </header>
+
+<script>
+(function() {
+  const shareBtn = document.getElementById('share-button');
+  const shareBtnText = document.getElementById('share-btn-text');
+  if (shareBtn && shareBtnText) {
+    shareBtn.addEventListener('click', function() {
+      const shareData = {
+        title: {{ page.title | jsonify }},
+        text: {{ site.data.sitetext[site.locale].collection_ui.share_text | default: "Check out this definition for " | jsonify }} + {{ page.title | jsonify }},
+        url: window.location.href
+      };
+
+      if (navigator.share) {
+        navigator.share(shareData)
+          .then(() => console.log('Successfully shared'))
+          .catch((error) => console.log('Error sharing:', error));
+      } else {
+        const tempInput = document.createElement('input');
+        tempInput.value = window.location.href;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        try {
+          document.execCommand('copy');
+          const originalText = shareBtnText.textContent;
+          shareBtnText.textContent = ' ' + {{ site.data.sitetext[site.locale].collection_ui.copied | default: "Copied!" | jsonify }};
+          const icon = shareBtn.querySelector('i');
+          if (icon) {
+            const originalIconClass = icon.className;
+            icon.className = 'fas fa-check mr-2';
+            setTimeout(() => {
+              icon.className = originalIconClass;
+            }, 2000);
+          }
+
+          setTimeout(() => {
+            shareBtnText.textContent = originalText;
+          }, 2000);
+        } catch (err) {
+          console.error('Unable to copy', err);
+        }
+        document.body.removeChild(tempInput);
+      }
+    });
+  }
+})();
+</script>
 
 {% if page.background == "grey" or page.background == "gray" %}
 <script>

@@ -39,6 +39,9 @@ en: &DEFAULT_EN
     view_details: "View Details"
     donate: "Donate"
     contribute: "Contribute"
+    share: "Share"
+    copied: "Copied!"
+    share_text: "Check out this definition for "
 
   donation_modal:
     title: "Support Our Mission"
@@ -200,6 +203,9 @@ es: &DEFAULT_ES
     view_details: "Ver Detalles"
     donate: "Donar"
     contribute: "Contribuir"
+    share: "Compartir"
+    copied: "¡Copiado!"
+    share_text: "Echa un vistazo a esta definición de "
 
   donation_modal:
     title: "Apoye Nuestra Misión"
