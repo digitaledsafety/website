@@ -420,6 +420,8 @@ permalink: /live/
       });
     }
 
+    let pollTimer = null;
+
     function showOfflineState() {
       if (offlineOverlay) offlineOverlay.style.display = 'flex';
       if (statusBadge) {
@@ -438,9 +440,55 @@ permalink: /live/
       if (statusText) statusText.textContent = 'LIVE NOW';
     }
 
-    function initPlayer() {
-      showLiveState();
+    function stopPlayerAndShowOffline() {
+      showOfflineState();
+      if (hls) {
+        hls.destroy();
+        hls = null;
+      }
+      if (video) {
+        video.pause();
+        video.removeAttribute('src');
+        video.load();
+      }
+    }
 
+    function scheduleNextCheck() {
+      if (pollTimer) clearTimeout(pollTimer);
+      pollTimer = setTimeout(checkLiveStatusAndInit, 10000);
+    }
+
+    function checkLiveStatusAndInit() {
+      const cacheBustUrl = streamUrl + (streamUrl.includes('?') ? '&' : '?') + '_t=' + Date.now();
+
+      fetch(cacheBustUrl)
+        .then(function(response) {
+          if (!response.ok) {
+            throw new Error('HTTP status ' + response.status);
+          }
+          return response.text();
+        })
+        .then(function(manifestText) {
+          if (manifestText.includes('#EXT-X-ENDLIST')) {
+            stopPlayerAndShowOffline();
+            scheduleNextCheck();
+          } else {
+            if (pollTimer) {
+              clearTimeout(pollTimer);
+              pollTimer = null;
+            }
+            showLiveState();
+            initPlayer();
+          }
+        })
+        .catch(function(err) {
+          console.warn('Error checking stream manifest:', err);
+          stopPlayerAndShowOffline();
+          scheduleNextCheck();
+        });
+    }
+
+    function initPlayer() {
       if (Hls.isSupported()) {
         if (hls) {
           hls.destroy();
@@ -463,7 +511,8 @@ permalink: /live/
             switch (data.type) {
               case Hls.ErrorTypes.NETWORK_ERROR:
                 console.warn('Fatal network error encountered');
-                showOfflineState();
+                stopPlayerAndShowOffline();
+                scheduleNextCheck();
                 break;
               case Hls.ErrorTypes.MEDIA_ERROR:
                 console.warn('Fatal media error encountered, recovering...');
@@ -471,8 +520,8 @@ permalink: /live/
                 break;
               default:
                 console.warn('Unrecoverable error encountered');
-                hls.destroy();
-                showOfflineState();
+                stopPlayerAndShowOffline();
+                scheduleNextCheck();
                 break;
             }
           }
@@ -487,20 +536,22 @@ permalink: /live/
         });
 
         video.addEventListener('error', function() {
-          showOfflineState();
+          stopPlayerAndShowOffline();
+          scheduleNextCheck();
         });
       } else {
-        showOfflineState();
+        stopPlayerAndShowOffline();
+        scheduleNextCheck();
       }
     }
 
-    // Initialize Stream
-    initPlayer();
+    // Check status and initialize
+    checkLiveStatusAndInit();
 
     // Retry Button Handler
     if (retryBtn) {
       retryBtn.addEventListener('click', function() {
-        initPlayer();
+        checkLiveStatusAndInit();
       });
     }
 
