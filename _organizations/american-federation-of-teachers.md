@@ -1,12 +1,12 @@
 ---
-title: "American Federation of Teachers"
+title: "American Federation of Teachers (AFT)"
 homepage: https://www.aft.org
 donation_url: https://www.aft.org
 image: /assets/img/header-bg.jpg
-tags: ["organization"]
+tags: ["Education", "Union", "Equity"]
 
 caption:
   thumbnail: /assets/img/header-bg.jpg
 ---
 
-Supporting STEM education and innovation.
+The AFT empowers underserved students by advocating for the resources and modern professional development that teachers need to deliver equitable STEM education in every community.

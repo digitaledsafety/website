@@ -3,41 +3,15 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="{{ page.description | escape }}">
+    <meta name="author" content="{{ site.author.name | escape }}">
     
-    {% comment %}
-    This section below is for defining manifest file for PWAs
-    {% endcomment %}
-    {% capture manifestObj %}
-    { 
-      "name": "{{page.title}}",
-      "short_name": "{{page.subtitle}}", 
-      "description": "{{page.description}}",
-      "icons": [
-        {
-          "src": "/assets/img/favicon.ico",
-          "sizes": "192x192",
-          "type": "image/png"
-        },
-        {
-          "src": "/assets/img/favicon.ico",
-          "sizes": "512x512",
-          "type": "image/png"
-        }
-      ],
-      "start_url": "./{{page.url}}",
-      "display": "standalone",
-      "theme_color": "{{'#000000' | url_encode}}",
-      "background_color": "{{'#ffffff' | url_encode}}" 
-    }     
-    {% endcapture %}
-    <link rel="manifest" href='data:application/manifest+json,{{ manifestObj | strip_newlines }}' />
+    {% include pwa_manifest.html %}
     
     <title>{{ page.title }}</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <!-- Custom styles for this template -->
     <link href="https://getbootstrap.com/docs/4.0/examples/cover/cover.css" rel="stylesheet">
@@ -50,7 +24,7 @@
         <div class="inner">
           <h3 class="masthead-brand">{{ page.title }}</h3>
           <nav class="nav nav-masthead justify-content-center">
-            <a class="nav-link active" href="#">Home</a>
+            <a class="nav-link active" href="{{ site.baseurl }}/">Home</a>
           </nav>
         </div>
       </header>
@@ -75,8 +49,7 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
-    <script src="https://getbootstrap.com/docs/4.0/assets/js/vendor/popper.min.js"></script>
-    <script src="https://getbootstrap.com/docs/4.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   </body>
 </html>

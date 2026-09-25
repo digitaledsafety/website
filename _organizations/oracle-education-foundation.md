@@ -1,12 +1,12 @@
 ---
 title: "Oracle Education Foundation"
-homepage: https://www.oraclefoundation.org/contact.html
-donation_url: https://www.oraclefoundation.org/contact.html
+homepage: https://oraclefoundation.org
+donation_url: https://oraclefoundation.org
 image: /assets/img/header-bg.jpg
-tags: ["organization"]
+tags: ["Technology", "Design Thinking", "Computer Science"]
 
 caption:
   thumbnail: /assets/img/header-bg.jpg
 ---
 
-Supporting STEM education and innovation.
+The Oracle Education Foundation empowers underserved youth by teaching them modern design thinking and computer science skills to solve real-world problems.

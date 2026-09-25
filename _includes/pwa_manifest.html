@@ -1,0 +1,25 @@
+{% capture manifestObj %}
+{
+  "name": {{ page.title | default: site.title | jsonify }},
+  "short_name": {{ page.subtitle | default: page.title | default: site.title | jsonify }},
+  "description": {{ page.description | default: site.description | jsonify }},
+  "icons": [
+    {
+      "src": {{ "/assets/img/favicon.ico" | relative_url | jsonify }},
+      "sizes": "192x192",
+      "type": "image/x-icon"
+    },
+    {
+      "src": {{ "/assets/img/favicon.ico" | relative_url | jsonify }},
+      "sizes": "512x512",
+      "type": "image/x-icon"
+    }
+  ],
+  "scope": {{ page.pwa_scope | default: "/" | relative_url | jsonify }},
+  "start_url": {{ page.pwa_start_url | default: page.url | relative_url | jsonify }},
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
+{% endcapture %}
+<link rel="manifest" href='data:application/manifest+json,{{ manifestObj | strip_newlines | escape }}' />

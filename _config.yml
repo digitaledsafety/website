@@ -19,8 +19,8 @@ baseurl: "/" # the subpath of your site, e.g. /blog
 
 title      : Digital Education & Safety Foundation
 email      : hello@digitaleducationsafety.org #this is also the email contact forms will go to
-tagline    : "Empowering the under-served with a modern STE(A)M education!"
-description: "Empowering the under-served with a modern STE(A)M education!"
+tagline    : "Empowering the under-served with a modern STEM education"
+description: "Empowering the under-served with a modern STEM education"
 author     : Digital Education & Safety Foundation
 # logo:     #optional, defaults to site title
   # path: assets\img\clients\creative-market.jpg
@@ -28,8 +28,9 @@ author     : Digital Education & Safety Foundation
 
 locale: "en-US" # See available languages in _data/sitetext.yml
 
-analytics:
-  google: G-KEP2448L3X #Google Analytics tracking code here
+# Removing for now since we are trying Cloudflare Zaraz
+#analytics:
+  #google: G-KEP2448L3X #Google Analytics tracking code here
 
 ads:
   google: AW-16943605271 #Google Ads code here
@@ -57,6 +58,8 @@ collections:
   marketplace:
     output: true
     path: /marketplace/:path/   
+  services:
+    output: true
 
 markdown: kramdown
 
@@ -64,8 +67,12 @@ markdown: kramdown
 # Details: https://help.formspree.io/hc/en-us/articles/360017735154-How-to-prevent-spam
 formspree_form_path: "f/xkgoddyo"
 
+contact_form_action: "https://docs.google.com/forms/d/e/1FAIpQLSfVrEX0Fiy6xGPQ9xxJD0sFsygD8k7laf8GjrHDjcXNVhgcaA/formResponse"
+
 turnstile_sitekey: "0x4AAAAAAADF-VDrlBmuOtjT"
 turnstile_sitekey_mc: "0x4AAAAAACNF-Oav6RmaR0-r"
+paypal_client_id: "AS6SHvzpq2yfxtT4bKPJxK_EyXUiYDdtzePeY3t7RLHjavm9vlyMCzybiULu6a_tl6GdbpHekuqy49sr" # Default sandbox ID
+paypal_currency: "USD"
 
 plugins:
   - jekyll-remote-theme
@@ -87,7 +94,7 @@ author:
 
 twitter:
   username: digitaledsafety
-  card: summary
+  card: summary_large_image
 
 defaults:
   -
@@ -104,7 +111,11 @@ defaults:
     values:
       layout: "resource"
       image: /assets/img/glossaries/mast.jpg      
+  -
+    scope:
+      path: "" # an empty string here means all files in the project
+      type: "organizations"
+    values:
+      layout: "organization"
+      image: /assets/img/header-bg.jpg
 
-twitter:
-  username: digitaledsafety
-  card: summary_large_image

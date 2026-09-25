@@ -1,12 +1,12 @@
 ---
-title: "365 Productions Inc"
-homepage: https://www.365pinc.com
-donation_url: https://www.365pinc.com
+title: "365 Productions Inc."
+homepage: https://365productions.org
+donation_url: https://365productions.org
 image: /assets/img/header-bg.jpg
-tags: ["organization"]
+tags: ["Media Production", "Storytelling", "Community"]
 
 caption:
   thumbnail: /assets/img/header-bg.jpg
 ---
 
-Supporting STEM education and innovation.
+365 Productions Inc. empowers underserved communities by using modern media and storytelling to bridge the digital divide and promote STEM-driven social impact.

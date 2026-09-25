@@ -26,159 +26,102 @@ document.getElementById("page-top").className="bg-light";
 
 <div class="container py-5" id="pagecontainer">
 
-    <h2>Code collaboration with industry</h2>
+    <h2 class="mb-4">Collaborate with Industry Leaders through Open Source</h2>
 
-<p>
-    Open source projects provide an invaluable platform for individuals to develop and enhance their STEM skills. Participation in open source initiatives offers a practical and collaborative learning environment where enthusiasts can contribute to real-world projects. One of the key aspects is the transparency of the source code, allowing aspiring developers to explore and understand how complex systems function. This hands-on experience fosters a deeper comprehension of programming languages, algorithms, and software architecture.
-</p>
-
-    <p>
-
-        Open source projects encourage problem-solving and critical thinking. Contributors often encounter challenges that require creative solutions, honing their analytical skills and ability to troubleshoot issues. The collaborative nature of these projects promotes teamwork, communication, and project management skills, which are crucial in STEM fields where collaboration is common.
-</p>
-<p>
-Open source communities also expose individuals to a diverse range of technologies and tools. Contributors may work on projects related to data science, artificial intelligence, cybersecurity, or any other STEM discipline, providing exposure to a broad spectrum of applications. This exposure not only helps individuals discover their interests within STEM but also prepares them for the interdisciplinary nature of many STEM careers.
-
+    <p class="lead">
+        Open source is the heartbeat of modern technological innovation. By participating in these projects, you're not just writing code—you're joining a global community dedicated to solving real-world challenges through transparency and collaboration.
     </p>
 
-    <p>
-We've compiled a list of popular open source projects in industry below. The Contribute button will redirect you to a contribution page with best practices on how to get started!
-        </p>
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <div class="text-center mb-4">
+                <i class="fas fa-code fa-3x text-primary mb-3"></i>
+                <h5>Hands-on Mastery</h5>
+                <p class="text-muted">Dive deep into complex systems. Explore production-grade source code to master programming languages, sophisticated algorithms, and scalable software architectures.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="text-center mb-4">
+                <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                <h5>Collaborative Growth</h5>
+                <p class="text-muted">Hone your critical thinking and project management skills. Work alongside experienced mentors to troubleshoot issues and deliver creative, high-impact solutions.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="text-center mb-4">
+                <i class="fas fa-rocket fa-3x text-primary mb-3"></i>
+                <h5>Future-Ready Skills</h5>
+                <p class="text-muted">Gain exposure to cutting-edge fields like Artificial Intelligence, Cybersecurity, and Data Science, preparing you for the interdisciplinary demands of tomorrow's STEM careers.</p>
+            </div>
+        </div>
+    </div>
+
+    <p class="mt-4 text-center font-italic">
+        Explore our curated selection of industry-leading open source projects below. Click <strong>Contribute</strong> to find guided pathways and best practices for making your first impact.
+    </p>
+
+    {% assign ui_coll = site.data.sitetext[site.locale].collection_ui %}
 
     <script>
-        // Example array of JavaScript objects representing card
-        const cardData = 
+        window.cardData =
         [{% for card in posts %}
         {
             "title": {{card.title | jsonify}}, 
-            "tags": {{card.tags | jsonify}}, 
+            "tags": {{card.tags | default: "" | jsonify}},
             "path": {{card.id | jsonify}},
             "contribute": {{card.contribute | jsonify}}, 
             "caption": {{card.caption | jsonify}}, 
             "abbreviations": {{card.abbreviations | jsonify}},
             "homepage": {{card.homepage | jsonify}}, 
-            "description": {{card.excerpt | jsonify}}
-        },
-        {% endfor %}]
+            "description": {{card.excerpt | strip_html | strip_newlines | jsonify}},
+            "date": {{card.date | jsonify}}
+        }{% unless forloop.last %},{% endunless %}
+        {% endfor %}];
         
-      </script>
-    
-      <div class="row">
-          <!-- Filters -->
-          <div class="col-md-12">
-
-            <div class="btn-group">
-                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="fa fa-filter"></i> Filter by:
-                  <span class="caret"></span>
-                </a>
-                <ul id="card-filters" class="dropdown-menu">
-    
-                  <!-- dropdown menu links -->
-                </ul>
-              </div>
-
-   
-
-              <!-- Add more filters as needed -->
-          </div>
-        </div>
-        <div class="row">
-          <!-- List of Cards -->
-          <div class="col-md-12">
-              <div class="row" id="card-container">
-                  <!-- Cards will be dynamically populated here -->
-              </div>
-          </div>
-      </div>
-    
-    <!-- Add Bootstrap JS and jQuery for checkbox filtering -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
-    <script>
-      // Function to populate cards
-      function populateCards() {
-        const cardFiltersContainer = document.getElementById('card-filters');
-        cardFiltersContainer.innerHTML = '';
-        const fs = [];
-          cardData.forEach(cardObj => {
-            cardObj.tags.forEach(cardTag => {
-                if(!fs.includes(cardTag)) {
-                    fs.push(cardTag);
+        function renderGrid(data, container) {
+            renderGridShared(data, container, {
+                externalLinks: true,
+                imageHeight: '200px',
+                getImageUrl: (item) => (item.caption && item.caption.thumbnail) ? item.caption.thumbnail : '',
+                getLinkUrl: (item) => item.homepage,
+                getSubtitle: (item) => Array.isArray(item.tags) ? item.tags.join(', ') : (item.tags ? item.tags.split(',').join(', ') : ''),
+                getDescription: (item) => item.description || '',
+                renderFooter: (item, footer) => {
+                    const contribBtn = document.createElement('a');
+                    contribBtn.href = item.contribute;
+                    contribBtn.target = '_blank';
+                    contribBtn.rel = 'noopener noreferrer';
+                    contribBtn.classList.add('btn', 'btn-primary', 'btn-block');
+                    contribBtn.style.borderRadius = '20px';
+                    contribBtn.textContent = {{ ui_coll.contribute | default: "Contribute" | jsonify }};
+                    footer.appendChild(contribBtn);
                 }
-            })
-          });
+            });
+        }
+      </script>
+
+      {% include render_grid_script.html %}
     
-          fs.forEach(f => {
-            const isChecked = (f != '' ? 'checked' : '');
-            const filterHtml = `
-            <li class="pl-2"><div class="form-check">
-                <input type="checkbox" ${isChecked} class="form-check-input" id="${f}">
-                <label class="form-check-label" for="${f}">${f}</label>
-            </div></li>
-              `;
-              cardFiltersContainer.innerHTML += filterHtml;
-          });
-    
-        const cardContainer = document.getElementById('card-container');
-          cardContainer.innerHTML = '';
-          cardData.forEach(cardObj => {
-              const abbrev = (cardObj.abbreviations ? cardObj.abbreviations : '');
-              const cardHtml = `
-                  <div class="col-md-4 mb-3 filterable-card" data-filters="${cardObj.tags.join(',')}">
-                      <div class="card">
-                        <a target="_blank" href="${cardObj.homepage}"><img class="card-img-top img-fluid" src=${cardObj.caption.thumbnail} alt=""></a>
-                          <div class="card-body">
-                              <h5 class="card-title"><a href="${cardObj.homepage}">${cardObj.title}</a></h5>
-                              <p class="card-subtitle">${cardObj.tags}</h>
-                              <p class="card-text">${cardObj.description}</p>
-                              <a target="_blank" href="${cardObj.contribute}"" class="btn btn-primary">Contribute</a>
-                          </div>
-                      </div>
-                  </div>
-              `;
-              cardContainer.innerHTML += cardHtml;
-          });
-      }
-    
-      // Function to filter cards based on checkboxes
-      function filterCards() {
-          const selectedFilters = [];
-          // Get all selected filters
-          $('input[type="checkbox"]:checked').each(function () {
-              selectedFilters.push($(this).attr('id'));
-          });
-    
-          // Show/hide cards based on selected filters
-          $('.filterable-card').each(function () {
-              const card = $(this);
-              const filters = card.data('filters').split(',');
-              const showCard = filters.some(filter => selectedFilters.includes(filter));
-              card.toggleClass('d-none', !showCard);
-          });
-      }
-    
-      // Initialize filtering on page load and when checkboxes change
-      $(document).ready(function () {   
-          populateCards();
-    
-          $('input[type="checkbox"]').change(filterCards);      
-    
-          filterCards();
-      });
-    </script>
-    
-    
-    
-    
+      {% assign all_tags = "" | split: "," %}
+      {% for post in posts %}
+        {% if post.tags %}
+          {% for tag in post.tags %}
+            {% unless all_tags contains tag %}
+              {% assign all_tags = all_tags | push: tag %}
+            {% endunless %}
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+      {% assign sorted_tags = all_tags | sort %}
+
+      {% include grid_controls.html id="opensource" filter_options=sorted_tags %}
+
+      <div class="row" id="opensource-container" role="list">
+          <!-- Cards will be dynamically populated here -->
+      </div>
+
+      {% include grid_script.html id="opensource" data_var="cardData" %}
     
 </div>
 
 {% include contact.html %}
-
-
-
-
-
-
-

@@ -1,12 +1,12 @@
 ---
-title: "Intrepid Sea Air & Space Museum"
+title: "Intrepid Museum"
 homepage: https://www.intrepidmuseum.org
-donation_url: https://www.intrepidmuseum.org
+donation_url: https://www.intrepidmuseum.org/support
 image: /assets/img/header-bg.jpg
-tags: ["organization"]
+tags: ["Museum", "History", "STEM Education"]
 
 caption:
   thumbnail: /assets/img/header-bg.jpg
 ---
 
-Supporting STEM education and innovation.
+The Intrepid Museum empowers underserved students by using history and technology to provide immersive, modern STEM learning experiences that spark curiosity about science.

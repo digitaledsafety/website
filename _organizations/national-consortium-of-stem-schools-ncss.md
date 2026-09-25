@@ -1,12 +1,12 @@
 ---
-title: "National Consortium of STEM Schools (NCSS)"
-homepage: https://stemschools.org
-donation_url: https://stemschools.org
+title: "NCSSS"
+homepage: https://www.ncsss.org
+donation_url: https://www.ncsss.org
 image: /assets/img/header-bg.jpg
-tags: ["organization"]
+tags: ["Consortium", "High School", "Excellence"]
 
 caption:
   thumbnail: /assets/img/header-bg.jpg
 ---
 
-Supporting STEM education and innovation.
+NCSSS empowers underserved students by fostering collaboration among specialized STEM schools to share modern best practices and resources for high-level technical education.
