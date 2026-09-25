@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
 
 test.describe('Live Stream Page', () => {
-  test('should render video player, controls, live badge, and CTAs', async ({ page }) => {
+  test('should render video player, controls, live badge, CTAs, and platform links', async ({ page }) => {
     await page.goto('/live/');
 
     // Check page title & header
@@ -13,21 +13,20 @@ test.describe('Live Stream Page', () => {
     const video = page.locator('#video');
     await expect(video).toBeVisible();
 
-    // Take screenshot of light mode
-    await page.screenshot({ path: 'live_light_mode.png', fullPage: true });
-
     // Check cinema mode toggle
     const cinemaBtn = page.locator('#cinemaToggleBtn');
     await expect(cinemaBtn).toBeVisible();
     await cinemaBtn.click();
     await expect(page.locator('#livePageContainer')).toHaveClass(/cinema-mode/);
 
-    // Take screenshot of cinema mode
-    await page.screenshot({ path: 'live_cinema_mode.png', fullPage: true });
-
     // Check CTAs
     await expect(page.locator('#donateLiveBtn')).toBeVisible();
     await expect(page.locator('#shareLiveBtn')).toBeVisible();
+
+    // Check external platform links
+    await expect(page.locator('.platform-btn-youtube')).toBeVisible();
+    await expect(page.locator('.platform-btn-twitch')).toBeVisible();
+    await expect(page.locator('.platform-btn-discord')).toBeVisible();
 
     // Test donation modal trigger
     await page.locator('#donateLiveBtn').click();

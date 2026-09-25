@@ -47,7 +47,8 @@ permalink: /live/
     color: var(--live-text-dark);
   }
 
-  .live-page-container.cinema-mode .live-info-card h4 {
+  .live-page-container.cinema-mode .live-info-card h4,
+  .live-page-container.cinema-mode .live-info-card h5 {
     color: #ffffff !important;
   }
 
@@ -219,19 +220,62 @@ permalink: /live/
     transition: background-color 0.4s ease, border-color 0.4s ease;
   }
 
-  .stream-stats-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.75rem 1.25rem;
-    background: rgba(0, 0, 0, 0.03);
-    border-radius: 10px;
-    margin-top: 1.5rem;
-    font-size: 0.85rem;
+  .platform-links-bar {
+    margin-top: 1.75rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--live-border-light);
   }
 
-  .cinema-mode .stream-stats-bar {
-    background: rgba(255, 255, 255, 0.05);
+  .cinema-mode .platform-links-bar {
+    border-top-color: var(--live-border-dark);
+  }
+
+  .platform-btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+  }
+
+  .platform-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1.25rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-decoration: none !important;
+    transition: all 0.25 ease;
+  }
+
+  .platform-btn-youtube {
+    background-color: #ff0000;
+    color: #ffffff !important;
+  }
+
+  .platform-btn-youtube:hover {
+    background-color: #cc0000;
+    color: #ffffff !important;
+  }
+
+  .platform-btn-twitch {
+    background-color: #9146ff;
+    color: #ffffff !important;
+  }
+
+  .platform-btn-twitch:hover {
+    background-color: #772ce8;
+    color: #ffffff !important;
+  }
+
+  .platform-btn-discord {
+    background-color: #5865f2;
+    color: #ffffff !important;
+  }
+
+  .platform-btn-discord:hover {
+    background-color: #4752c4;
+    color: #ffffff !important;
   }
 
   @media (max-width: 768px) {
@@ -308,16 +352,23 @@ permalink: /live/
             The Digital Education & Safety Foundation is dedicated to empowering underserved communities with modern STEM education and digital safety tools. Our livestreams feature hands-on tech tutorials, open-source project showcases, live program updates, and Q&A sessions.
           </p>
 
-          <div class="stream-stats-bar">
-            <div>
-              <i class="fas fa-signal text-success mr-2"></i>
-              <span class="font-weight-bold">Stream Protocol:</span> HLS (m3u8)
-            </div>
-            <div>
-              <i class="fas fa-shield-alt text-info mr-2"></i>
-              <span>Secure Stream</span>
+          <!-- External Platforms Bar -->
+          <div class="platform-links-bar">
+            <h5 class="font-weight-bold mb-2">Also Watch On External Platforms</h5>
+            <p class="text-muted small mb-2">Prefer watching or chatting on your favorite platform? Catch our stream and community discussions on:</p>
+            <div class="platform-btn-group">
+              <a href="https://www.youtube.com/@digitaledsafety" target="_blank" rel="noopener noreferrer" class="platform-btn platform-btn-youtube">
+                <i class="fab fa-youtube mr-2"></i> YouTube Live
+              </a>
+              <a href="https://www.twitch.tv/digitaledsafety" target="_blank" rel="noopener noreferrer" class="platform-btn platform-btn-twitch">
+                <i class="fab fa-twitch mr-2"></i> Twitch
+              </a>
+              <a href="https://discord.gg/digitaledsafety" target="_blank" rel="noopener noreferrer" class="platform-btn platform-btn-discord">
+                <i class="fab fa-discord mr-2"></i> Discord Community
+              </a>
             </div>
           </div>
+
         </div>
 
       </div>
@@ -457,7 +508,7 @@ permalink: /live/
     // Share Button Handler
     if (shareBtn) {
       shareBtn.addEventListener('click', function() {
-        const liveUrl = window.location.origin + '/live';
+        const liveUrl = window.location.origin + '/live/';
         if (navigator.share) {
           navigator.share({
             title: 'Digital Education & Safety Foundation Stream',
