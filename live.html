@@ -1,0 +1,483 @@
+---
+layout: default
+title: Live Stream - Digital Education & Safety Foundation
+description: "Watch the Digital Education & Safety Foundation livestreams live. Learn about empowering under-served communities through modern STEM education and digital safety."
+permalink: /live/
+---
+
+{% include nav.html %}
+
+<style>
+  :root {
+    --live-bg-light: #f8f9fa;
+    --live-card-light: #ffffff;
+    --live-text-light: #212529;
+    --live-muted-light: #6c757d;
+    --live-border-light: #e9ecef;
+
+    --live-bg-dark: #0f172a;
+    --live-card-dark: #1e293b;
+    --live-text-dark: #f8fafc;
+    --live-muted-dark: #94a3b8;
+    --live-border-dark: #334155;
+  }
+
+  .live-page-container {
+    padding-top: 130px;
+    padding-bottom: 80px;
+    background-color: var(--live-bg-light);
+    color: var(--live-text-light);
+    min-height: 88vh;
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+
+  /* Cinema / Dark Mode styling */
+  .live-page-container.cinema-mode {
+    background-color: var(--live-bg-dark);
+    color: var(--live-text-dark);
+  }
+
+  .live-page-container.cinema-mode .text-muted {
+    color: var(--live-muted-dark) !important;
+  }
+
+  .live-page-container.cinema-mode .live-info-card {
+    background-color: var(--live-card-dark);
+    border-color: var(--live-border-dark);
+    color: var(--live-text-dark);
+  }
+
+  .live-page-container.cinema-mode .live-info-card h4 {
+    color: #ffffff !important;
+  }
+
+  .live-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+  }
+
+  .header-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .live-badge {
+    display: inline-flex;
+    align-items: center;
+    background-color: #dc3545;
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 0.4rem 0.9rem;
+    border-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 0 15px rgba(220, 53, 69, 0.6);
+    transition: all 0.3s ease;
+  }
+
+  .live-badge .pulse-dot {
+    width: 10px;
+    height: 10px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    margin-right: 8px;
+    animation: pulse 1.5s infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+    }
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 8px rgba(255, 255, 255, 0);
+    }
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    }
+  }
+
+  .cinema-toggle-btn {
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.35rem 0.9rem;
+    transition: all 0.3s ease;
+  }
+
+  .player-outer-wrapper {
+    position: relative;
+    margin-bottom: 2rem;
+  }
+
+  /* Ambient Glow Effect */
+  .player-ambient-glow {
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    right: 5%;
+    bottom: 5%;
+    background: linear-gradient(135deg, rgba(254, 209, 54, 0.3), rgba(220, 53, 69, 0.3));
+    filter: blur(40px);
+    border-radius: 20px;
+    opacity: 0.6;
+    transition: opacity 0.5s ease;
+    z-index: 0;
+  }
+
+  .cinema-mode .player-ambient-glow {
+    opacity: 0.8;
+  }
+
+  .player-wrapper {
+    position: relative;
+    background: #000000;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .video-container {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 Aspect Ratio */
+  }
+
+  .video-container video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    outline: none;
+  }
+
+  .stream-offline-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.95);
+    color: #ffffff;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+    z-index: 10;
+    backdrop-filter: blur(8px);
+  }
+
+  .stream-offline-overlay i {
+    font-size: 3.5rem;
+    color: #fed136;
+    margin-bottom: 1rem;
+  }
+
+  .live-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .live-actions .btn {
+    padding: 0.75rem 1.75rem;
+    font-weight: 700;
+    border-radius: 50px;
+    text-transform: uppercase;
+    font-size: 0.88rem;
+    letter-spacing: 0.5px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  }
+
+  .live-actions .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15) !important;
+  }
+
+  .live-info-card {
+    background: var(--live-card-light);
+    border-radius: 16px;
+    padding: 2.25rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    border: 1px solid var(--live-border-light);
+    transition: background-color 0.4s ease, border-color 0.4s ease;
+  }
+
+  .stream-stats-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.25rem;
+    background: rgba(0, 0, 0, 0.03);
+    border-radius: 10px;
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+  }
+
+  .cinema-mode .stream-stats-bar {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  @media (max-width: 768px) {
+    .live-page-container {
+      padding-top: 100px;
+    }
+    .live-info-card {
+      padding: 1.5rem;
+    }
+  }
+</style>
+
+<div id="livePageContainer" class="live-page-container">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+
+        <!-- Header Section -->
+        <div class="live-header">
+          <div class="header-top-bar">
+            <div id="liveStatusBadge" class="live-badge">
+              <span class="pulse-dot"></span>
+              <span id="statusText">LIVE NOW</span>
+            </div>
+            <button id="cinemaToggleBtn" class="btn btn-outline-secondary cinema-toggle-btn">
+              <i class="fas fa-moon mr-1"></i> Cinema Mode
+            </button>
+          </div>
+
+          <h1 class="section-heading text-uppercase font-weight-bold mb-2">Foundation Live Stream</h1>
+          <p class="text-muted lead mb-0">Join our interactive sessions on STEM education, open-source tech, and digital safety.</p>
+        </div>
+
+        <!-- Video Player Section -->
+        <div class="player-outer-wrapper">
+          <div class="player-ambient-glow"></div>
+
+          <div class="player-wrapper">
+            <div class="video-container">
+              <video id="video" controls autoplay muted playsinline poster="/assets/img/header-bg.jpg"></video>
+
+              <!-- Offline/Error Overlay -->
+              <div id="offlineOverlay" class="stream-offline-overlay">
+                <i class="fas fa-broadcast-tower"></i>
+                <h3 class="mb-2 font-weight-bold">Stream Offline or Reconnecting</h3>
+                <p class="text-muted mb-4" style="max-width: 500px;">
+                  The livestream is currently offline or initializing. Click below to reconnect to the stream.
+                </p>
+                <button id="retryStreamBtn" class="btn btn-warning font-weight-bold px-4 py-2" style="border-radius: 50px;">
+                  <i class="fas fa-redo-alt mr-2"></i> Retry Stream
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive CTAs -->
+        <div class="live-actions">
+          <button id="donateLiveBtn" class="btn btn-warning shadow-sm" onclick="if(window.handleLaunch){window.handleLaunch('/#donate');} else {$('#donationModal').modal('show');}">
+            <i class="fas fa-heart mr-2 text-danger"></i> Support Our Mission
+          </button>
+          <a href="/#marketplace" class="btn btn-secondary shadow-sm">
+            <i class="fas fa-th mr-2"></i> Explore Programs
+          </a>
+          <button id="shareLiveBtn" class="btn btn-outline-primary shadow-sm">
+            <i class="fas fa-share-alt mr-2"></i> Share Stream
+          </button>
+        </div>
+
+        <!-- Details & Information Card -->
+        <div class="live-info-card">
+          <h4 class="mb-3 font-weight-bold text-dark">About The Digital Education & Safety Foundation</h4>
+          <p class="text-muted mb-3">
+            The Digital Education & Safety Foundation is dedicated to empowering underserved communities with modern STEM education and digital safety tools. Our livestreams feature hands-on tech tutorials, open-source project showcases, live program updates, and Q&A sessions.
+          </p>
+
+          <div class="stream-stats-bar">
+            <div>
+              <i class="fas fa-signal text-success mr-2"></i>
+              <span class="font-weight-bold">Stream Protocol:</span> HLS (m3u8)
+            </div>
+            <div>
+              <i class="fas fa-shield-alt text-info mr-2"></i>
+              <span>Secure Stream</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include donation_modal.html %}
+
+<!-- HLS.js Library -->
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script>
+  (function() {
+    const video = document.getElementById('video');
+    const streamUrl = 'https://myhlsfiledrop.blob.core.windows.net/hls/stream.m3u8';
+    const offlineOverlay = document.getElementById('offlineOverlay');
+    const retryBtn = document.getElementById('retryStreamBtn');
+    const shareBtn = document.getElementById('shareLiveBtn');
+    const statusBadge = document.getElementById('liveStatusBadge');
+    const statusText = document.getElementById('statusText');
+    const cinemaToggleBtn = document.getElementById('cinemaToggleBtn');
+    const livePageContainer = document.getElementById('livePageContainer');
+
+    let hls = null;
+
+    // Cinema Mode Toggle
+    if (cinemaToggleBtn && livePageContainer) {
+      let isCinema = localStorage.getItem('live_cinema_mode') === 'true';
+
+      function updateCinemaState(enabled) {
+        if (enabled) {
+          livePageContainer.classList.add('cinema-mode');
+          cinemaToggleBtn.classList.remove('btn-outline-secondary');
+          cinemaToggleBtn.classList.add('btn-warning');
+          cinemaToggleBtn.innerHTML = '<i class="fas fa-sun mr-1"></i> Light Mode';
+        } else {
+          livePageContainer.classList.remove('cinema-mode');
+          cinemaToggleBtn.classList.remove('btn-warning');
+          cinemaToggleBtn.classList.add('btn-outline-secondary');
+          cinemaToggleBtn.innerHTML = '<i class="fas fa-moon mr-1"></i> Cinema Mode';
+        }
+      }
+
+      updateCinemaState(isCinema);
+
+      cinemaToggleBtn.addEventListener('click', function() {
+        isCinema = !isCinema;
+        localStorage.setItem('live_cinema_mode', isCinema);
+        updateCinemaState(isCinema);
+      });
+    }
+
+    function showOfflineState() {
+      if (offlineOverlay) offlineOverlay.style.display = 'flex';
+      if (statusBadge) {
+        statusBadge.style.backgroundColor = '#6c757d';
+        statusBadge.style.boxShadow = 'none';
+      }
+      if (statusText) statusText.textContent = 'OFFLINE';
+    }
+
+    function showLiveState() {
+      if (offlineOverlay) offlineOverlay.style.display = 'none';
+      if (statusBadge) {
+        statusBadge.style.backgroundColor = '#dc3545';
+        statusBadge.style.boxShadow = '0 0 15px rgba(220, 53, 69, 0.6)';
+      }
+      if (statusText) statusText.textContent = 'LIVE NOW';
+    }
+
+    function initPlayer() {
+      showLiveState();
+
+      if (Hls.isSupported()) {
+        if (hls) {
+          hls.destroy();
+        }
+        hls = new Hls({
+          manifestLoadingTimeOut: 10000,
+          manifestLoadingMaxRetry: 3
+        });
+        hls.loadSource(streamUrl);
+        hls.attachMedia(video);
+
+        hls.on(Hls.Events.MANIFEST_PARSED, function() {
+          video.play().catch(function(err) {
+            console.log('Autoplay blocked or awaiting interaction:', err);
+          });
+        });
+
+        hls.on(Hls.Events.ERROR, function(event, data) {
+          if (data.fatal) {
+            switch (data.type) {
+              case Hls.ErrorTypes.NETWORK_ERROR:
+                console.warn('Fatal network error encountered');
+                showOfflineState();
+                break;
+              case Hls.ErrorTypes.MEDIA_ERROR:
+                console.warn('Fatal media error encountered, recovering...');
+                hls.recoverMediaError();
+                break;
+              default:
+                console.warn('Unrecoverable error encountered');
+                hls.destroy();
+                showOfflineState();
+                break;
+            }
+          }
+        });
+
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = streamUrl;
+        video.addEventListener('loadedmetadata', function() {
+          video.play().catch(function(err) {
+            console.log('Autoplay blocked:', err);
+          });
+        });
+
+        video.addEventListener('error', function() {
+          showOfflineState();
+        });
+      } else {
+        showOfflineState();
+      }
+    }
+
+    // Initialize Stream
+    initPlayer();
+
+    // Retry Button Handler
+    if (retryBtn) {
+      retryBtn.addEventListener('click', function() {
+        initPlayer();
+      });
+    }
+
+    // Share Button Handler
+    if (shareBtn) {
+      shareBtn.addEventListener('click', function() {
+        const liveUrl = window.location.origin + '/live';
+        if (navigator.share) {
+          navigator.share({
+            title: 'Digital Education & Safety Foundation Stream',
+            url: liveUrl
+          }).catch(function(e) {
+            console.log('Share canceled/failed:', e);
+          });
+        } else if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(liveUrl).then(function() {
+            const origText = shareBtn.innerHTML;
+            shareBtn.innerHTML = '<i class="fas fa-check mr-2 text-success"></i> Copied!';
+            setTimeout(function() {
+              shareBtn.innerHTML = origText;
+            }, 2000);
+          }).catch(function(err) {
+            console.error('Copy failed:', err);
+          });
+        }
+      });
+    }
+
+  })();
+</script>
