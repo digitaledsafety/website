@@ -14,12 +14,6 @@ permalink: /live/
     --live-text-light: #212529;
     --live-muted-light: #6c757d;
     --live-border-light: #e9ecef;
-
-    --live-bg-dark: #0f172a;
-    --live-card-dark: #1e293b;
-    --live-text-dark: #f8fafc;
-    --live-muted-dark: #94a3b8;
-    --live-border-dark: #334155;
   }
 
   .live-page-container {
@@ -29,27 +23,6 @@ permalink: /live/
     color: var(--live-text-light);
     min-height: 88vh;
     transition: background-color 0.4s ease, color 0.4s ease;
-  }
-
-  /* Cinema / Dark Mode styling */
-  .live-page-container.cinema-mode {
-    background-color: var(--live-bg-dark);
-    color: var(--live-text-dark);
-  }
-
-  .live-page-container.cinema-mode .text-muted {
-    color: var(--live-muted-dark) !important;
-  }
-
-  .live-page-container.cinema-mode .live-info-card {
-    background-color: var(--live-card-dark);
-    border-color: var(--live-border-dark);
-    color: var(--live-text-dark);
-  }
-
-  .live-page-container.cinema-mode .live-info-card h4,
-  .live-page-container.cinema-mode .live-info-card h5 {
-    color: #ffffff !important;
   }
 
   .live-header {
@@ -106,14 +79,6 @@ permalink: /live/
     }
   }
 
-  .cinema-toggle-btn {
-    border-radius: 50px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    padding: 0.35rem 0.9rem;
-    transition: all 0.3s ease;
-  }
-
   .player-outer-wrapper {
     position: relative;
     margin-bottom: 2rem;
@@ -132,10 +97,6 @@ permalink: /live/
     opacity: 0.6;
     transition: opacity 0.5s ease;
     z-index: 0;
-  }
-
-  .cinema-mode .player-ambient-glow {
-    opacity: 0.8;
   }
 
   .player-wrapper {
@@ -225,10 +186,6 @@ permalink: /live/
     border-top: 1px solid var(--live-border-light);
   }
 
-  .cinema-mode .platform-links-bar {
-    border-top-color: var(--live-border-dark);
-  }
-
   .platform-btn-group {
     display: flex;
     flex-wrap: wrap;
@@ -299,9 +256,6 @@ permalink: /live/
               <span class="pulse-dot"></span>
               <span id="statusText">LIVE NOW</span>
             </div>
-            <button id="cinemaToggleBtn" class="btn btn-outline-secondary cinema-toggle-btn">
-              <i class="fas fa-moon mr-1"></i> Cinema Mode
-            </button>
           </div>
 
           <h1 class="section-heading text-uppercase font-weight-bold mb-2">Foundation Live Stream</h1>
@@ -388,38 +342,9 @@ permalink: /live/
     const shareBtn = document.getElementById('shareLiveBtn');
     const statusBadge = document.getElementById('liveStatusBadge');
     const statusText = document.getElementById('statusText');
-    const cinemaToggleBtn = document.getElementById('cinemaToggleBtn');
     const livePageContainer = document.getElementById('livePageContainer');
 
     let hls = null;
-
-    // Cinema Mode Toggle
-    if (cinemaToggleBtn && livePageContainer) {
-      let isCinema = localStorage.getItem('live_cinema_mode') === 'true';
-
-      function updateCinemaState(enabled) {
-        if (enabled) {
-          livePageContainer.classList.add('cinema-mode');
-          cinemaToggleBtn.classList.remove('btn-outline-secondary');
-          cinemaToggleBtn.classList.add('btn-warning');
-          cinemaToggleBtn.innerHTML = '<i class="fas fa-sun mr-1"></i> Light Mode';
-        } else {
-          livePageContainer.classList.remove('cinema-mode');
-          cinemaToggleBtn.classList.remove('btn-warning');
-          cinemaToggleBtn.classList.add('btn-outline-secondary');
-          cinemaToggleBtn.innerHTML = '<i class="fas fa-moon mr-1"></i> Cinema Mode';
-        }
-      }
-
-      updateCinemaState(isCinema);
-
-      cinemaToggleBtn.addEventListener('click', function() {
-        isCinema = !isCinema;
-        localStorage.setItem('live_cinema_mode', isCinema);
-        updateCinemaState(isCinema);
-      });
-    }
-
     let pollTimer = null;
 
     function showOfflineState() {

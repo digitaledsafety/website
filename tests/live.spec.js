@@ -13,11 +13,8 @@ test.describe('Live Stream Page', () => {
     const video = page.locator('#video');
     await expect(video).toBeVisible();
 
-    // Check cinema mode toggle
-    const cinemaBtn = page.locator('#cinemaToggleBtn');
-    await expect(cinemaBtn).toBeVisible();
-    await cinemaBtn.click();
-    await expect(page.locator('#livePageContainer')).toHaveClass(/cinema-mode/);
+    // Ensure cinema mode toggle is not present
+    await expect(page.locator('#cinemaToggleBtn')).not.toBeAttached();
 
     // Check CTAs
     await expect(page.locator('#donateLiveBtn')).toBeVisible();
