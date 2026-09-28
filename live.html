@@ -665,8 +665,9 @@ permalink: /live/
       const ev = eventsData.find(e => e.id === eventId);
       if (!ev) return;
 
-      const startUtc = formatISODateTimeForCal(ev.start);
-      const endUtc = formatISODateTimeForCal(ev.end || ev.start);
+      const startIso = ev.startIso || getEventStartIso(ev);
+      const startUtc = formatISODateTimeForCal(startIso);
+      const endUtc = formatISODateTimeForCal(ev.end ? getEventStartIso({start: ev.end}) : startIso);
 
       const icsContent = [
         'BEGIN:VCALENDAR',
@@ -697,8 +698,9 @@ permalink: /live/
       const ev = eventsData.find(e => e.id === eventId);
       if (!ev) return;
 
-      const startUtc = formatISODateTimeForCal(ev.start);
-      const endUtc = formatISODateTimeForCal(ev.end || ev.start);
+      const startIso = ev.startIso || getEventStartIso(ev);
+      const startUtc = formatISODateTimeForCal(startIso);
+      const endUtc = formatISODateTimeForCal(ev.end ? getEventStartIso({start: ev.end}) : startIso);
 
       const gcalUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
         '&text=' + encodeURIComponent(ev.title || '') +
@@ -755,9 +757,20 @@ permalink: /live/
       return new Date().toISOString();
     }
 
+    function getEventStartIso(ev) {
+      if (ev.start_formatted) return ev.start_formatted;
+      if (ev.start) {
+        if (ev.start.includes('T')) return ev.start;
+        // Handle M/D/YYYY HH:MM:SS format
+        const dateObj = new Date(ev.start);
+        if (!isNaN(dateObj.getTime())) return dateObj.toISOString();
+      }
+      return new Date().toISOString();
+    }
+
     // Schedule Rendering Logic
     function fetchAndRenderEvents() {
-      const primaryApiUrl = '/api/events?resource=Events&$format=json';
+      const primaryApiUrl = 'https://api.digitaleducationsafety.org/v1/relay?action=odata&username=digitaledsafety&resource=events&$orderby=date_published%20desc';
       const fallbackJsonUrl = '/assets/data/events.json';
 
       fetch(primaryApiUrl)
@@ -777,8 +790,12 @@ permalink: /live/
             data = parseIcsText(data);
           }
           eventsData = Array.isArray(data) ? data : [];
+          // Normalize start date field
+          eventsData.forEach(ev => {
+            ev.startIso = getEventStartIso(ev);
+          });
           // Sort chronologically
-          eventsData.sort((a, b) => new Date(a.start) - new Date(b.start));
+          eventsData.sort((a, b) => new Date(a.startIso) - new Date(b.startIso));
 
           renderEventsList();
           setupNextStreamOverlayHighlight();
@@ -798,7 +815,7 @@ permalink: /live/
 
       const now = new Date();
       const filtered = eventsData.filter(ev => {
-        const evDate = new Date(ev.start);
+        const evDate = new Date(ev.startIso);
         return currentFilter === 'upcoming' ? evDate >= now : evDate < now;
       });
 
@@ -816,7 +833,7 @@ permalink: /live/
 
       filtered.forEach(ev => {
         const isNext = (ev.id === nextUpcomingId && currentFilter === 'upcoming');
-        const formattedDate = formatFormattedDateTime(ev.start);
+        const formattedDate = formatFormattedDateTime(ev.startIso);
 
         html += `
           <div class="event-card-compact ${isNext ? 'featured-next' : ''}">
@@ -855,7 +872,7 @@ permalink: /live/
 
     function getNextUpcomingEvent() {
       const now = new Date();
-      return eventsData.find(ev => new Date(ev.start) >= now) || null;
+      return eventsData.find(ev => new Date(ev.startIso) >= now) || null;
     }
 
     function setupNextStreamOverlayHighlight() {
@@ -870,10 +887,10 @@ permalink: /live/
       }
 
       titleEl.textContent = nextEv.title;
-      timeEl.textContent = formatFormattedDateTime(nextEv.start);
+      timeEl.textContent = formatFormattedDateTime(nextEv.startIso);
       overlayBox.style.display = 'block';
 
-      startCountdown(new Date(nextEv.start).getTime());
+      startCountdown(new Date(nextEv.startIso).getTime());
     }
 
     function startCountdown(targetTimestamp) {
