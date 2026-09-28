@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
 
 test.describe('Live Stream Page', () => {
-  test('should render video player, controls, live badge, CTAs, platform links, and schedule section', async ({ page }) => {
+  test('should render video player, controls, live badge, CTAs, platform links, and sidebar schedule', async ({ page }) => {
     await page.goto('/live/');
 
     // Check page title & header
@@ -13,44 +13,40 @@ test.describe('Live Stream Page', () => {
     const video = page.locator('#video');
     await expect(video).toBeVisible();
 
-    // Ensure cinema mode toggle is not present
-    await expect(page.locator('#cinemaToggleBtn')).not.toBeAttached();
-
     // Check CTAs
     await expect(page.locator('#donateLiveBtn')).toBeVisible();
     await expect(page.locator('#shareLiveBtn')).toBeVisible();
+
+    // Check main explanation card
+    await expect(page.locator('.live-info-card')).toContainText('About The Digital Education & Safety Foundation Livestreams');
 
     // Check external platform links
     await expect(page.locator('.platform-btn-youtube')).toBeVisible();
     await expect(page.locator('.platform-btn-twitch')).toBeVisible();
     await expect(page.locator('.platform-btn-discord')).toBeVisible();
 
-    // Check Schedule section elements
-    await expect(page.locator('.schedule-section')).toBeVisible();
+    // Check Sidebar Schedule section elements
+    await expect(page.locator('.schedule-sidebar-card')).toBeVisible();
     await expect(page.locator('#btnFilterUpcoming')).toBeVisible();
     await expect(page.locator('#btnFilterPast')).toBeVisible();
-    await expect(page.locator('.event-card').first()).toBeVisible();
-
-    // Check Add to Calendar dropdown
-    const calDropdown = page.locator('.event-card .dropdown-toggle').first();
-    await expect(calDropdown).toBeVisible();
+    await expect(page.locator('.event-card-compact').first()).toBeVisible();
 
     // Test donation modal trigger
     await page.locator('#donateLiveBtn').click();
     await expect(page.locator('#donationModal')).toBeVisible();
   });
 
-  test('should filter between upcoming and past streams', async ({ page }) => {
+  test('should filter between upcoming and past streams in sidebar widget', async ({ page }) => {
     await page.goto('/live/');
 
     // Default filter is upcoming streams
     await expect(page.locator('#btnFilterUpcoming')).toHaveClass(/active/);
-    await expect(page.locator('.event-card').first()).toBeVisible();
+    await expect(page.locator('.event-card-compact').first()).toBeVisible();
 
     // Switch filter to past highlights
     await page.locator('#btnFilterPast').click();
     await expect(page.locator('#btnFilterPast')).toHaveClass(/active/);
-    await expect(page.locator('.event-card').first()).toBeVisible();
+    await expect(page.locator('.event-card-compact').first()).toBeVisible();
   });
 
   test('should detect OFFLINE status and display Next Stream Countdown overlay when manifest contains #EXT-X-ENDLIST', async ({ page }) => {
