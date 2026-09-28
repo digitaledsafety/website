@@ -780,7 +780,10 @@ permalink: /live/
           if (contentType.includes('text/calendar')) {
             return res.text().then(parseIcsText);
           }
-          return res.json();
+          if (contentType.includes('application/json') || contentType.includes('text/plain')) {
+            return res.json();
+          }
+          throw new Error('Non-JSON response from primary API');
         })
         .catch(() => {
           return fetch(fallbackJsonUrl).then(res => res.json());

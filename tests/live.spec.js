@@ -1,6 +1,38 @@
 const { test, expect } = require('@playwright/test');
 
+const sampleEvents = [
+  {
+    "id": "event-1",
+    "title": "Empowering Underserved Communities with Open-Source STEM Tools",
+    "description": "Learn how modern open-source software and low-cost hardware can transform STEM education.",
+    "start": "2027-04-15T18:00:00Z",
+    "end": "2027-04-15T19:30:00Z",
+    "url": "https://digitaleducationandsafety.org/live/",
+    "speaker": "Digital Education & Safety Team"
+  },
+  {
+    "id": "event-4",
+    "title": "Introduction to Robotics and IoT for Beginners",
+    "description": "Past workshop recap and Q&A covering microcontroller basics.",
+    "start": "2024-03-10T17:00:00Z",
+    "end": "2024-03-10T18:30:00Z",
+    "url": "https://digitaleducationandsafety.org/live/",
+    "speaker": "Robotics Club Mentors"
+  }
+];
+
 test.describe('Live Stream Page', () => {
+  test.beforeEach(async ({ page }) => {
+    // Route primary API calls to return test dataset deterministically
+    await page.route('**/relay?action=odata*', route => {
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(sampleEvents)
+      });
+    });
+  });
+
   test('should render video player, controls, live badge, CTAs, platform links, and sidebar schedule', async ({ page }) => {
     await page.goto('/live/');
 
