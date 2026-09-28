@@ -1,0 +1,42 @@
+[
+  {
+    "id": "event-1",
+    "title": "Empowering Underserved Communities with Open-Source STEM Tools",
+    "description": "Learn how modern open-source software and low-cost hardware can transform STEM education in community centers and schools.",
+    "start": "2027-04-15T18:00:00Z",
+    "end": "2027-04-15T19:30:00Z",
+    "url": "https://digitaleducationandsafety.org/live/",
+    "speaker": "Digital Education & Safety Team",
+    "tags": ["STEM", "Open Source", "Community"]
+  },
+  {
+    "id": "event-2",
+    "title": "Digital Safety & Privacy Essentials for Families & Educators",
+    "description": "An interactive workshop covering online privacy, safe browsing practices, and practical tools to protect children online.",
+    "start": "2027-04-22T19:00:00Z",
+    "end": "2027-04-22T20:00:00Z",
+    "url": "https://digitaleducationandsafety.org/live/",
+    "speaker": "Privacy & Safety Panel",
+    "tags": ["Digital Safety", "Privacy", "Education"]
+  },
+  {
+    "id": "event-3",
+    "title": "Building Accessible Web Applications: Best Practices & Live Coding",
+    "description": "A hands-on live coding session focusing on web accessibility, screen reader optimization, and inclusive UI design principles.",
+    "start": "2027-04-29T18:30:00Z",
+    "end": "2027-04-29T20:00:00Z",
+    "url": "https://digitaleducationandsafety.org/live/",
+    "speaker": "Accessibility Engineering Team",
+    "tags": ["Accessibility", "WebDev", "Coding"]
+  },
+  {
+    "id": "event-4",
+    "title": "Introduction to Robotics and IoT for Beginners",
+    "description": "Past workshop recap and Q&A covering microcontroller basics, simple sensors, and beginner-friendly IoT projects.",
+    "start": "2025-03-10T17:00:00Z",
+    "end": "2025-03-10T18:30:00Z",
+    "url": "https://digitaleducationandsafety.org/live/",
+    "speaker": "Robotics Club Mentors",
+    "tags": ["Robotics", "IoT", "Beginners"]
+  }
+]

@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
 
 test.describe('Live Stream Page', () => {
-  test('should render video player, controls, live badge, CTAs, and platform links', async ({ page }) => {
+  test('should render video player, controls, live badge, CTAs, platform links, and schedule section', async ({ page }) => {
     await page.goto('/live/');
 
     // Check page title & header
@@ -25,12 +25,35 @@ test.describe('Live Stream Page', () => {
     await expect(page.locator('.platform-btn-twitch')).toBeVisible();
     await expect(page.locator('.platform-btn-discord')).toBeVisible();
 
+    // Check Schedule section elements
+    await expect(page.locator('.schedule-section')).toBeVisible();
+    await expect(page.locator('#btnFilterUpcoming')).toBeVisible();
+    await expect(page.locator('#btnFilterPast')).toBeVisible();
+    await expect(page.locator('.event-card').first()).toBeVisible();
+
+    // Check Add to Calendar dropdown
+    const calDropdown = page.locator('.event-card .dropdown-toggle').first();
+    await expect(calDropdown).toBeVisible();
+
     // Test donation modal trigger
     await page.locator('#donateLiveBtn').click();
     await expect(page.locator('#donationModal')).toBeVisible();
   });
 
-  test('should detect OFFLINE status when manifest contains #EXT-X-ENDLIST', async ({ page }) => {
+  test('should filter between upcoming and past streams', async ({ page }) => {
+    await page.goto('/live/');
+
+    // Default filter is upcoming streams
+    await expect(page.locator('#btnFilterUpcoming')).toHaveClass(/active/);
+    await expect(page.locator('.event-card').first()).toBeVisible();
+
+    // Switch filter to past highlights
+    await page.locator('#btnFilterPast').click();
+    await expect(page.locator('#btnFilterPast')).toHaveClass(/active/);
+    await expect(page.locator('.event-card').first()).toBeVisible();
+  });
+
+  test('should detect OFFLINE status and display Next Stream Countdown overlay when manifest contains #EXT-X-ENDLIST', async ({ page }) => {
     // Intercept m3u8 fetch and return static manifest with #EXT-X-ENDLIST
     await page.route('**/*.m3u8*', route => {
       route.fulfill({
@@ -50,6 +73,8 @@ stream4.ts
 
     await expect(page.locator('#statusText')).toHaveText('OFFLINE');
     await expect(page.locator('#offlineOverlay')).toBeVisible();
+    await expect(page.locator('#nextStreamOverlayBox')).toBeVisible();
+    await expect(page.locator('#countdownTimer')).toBeVisible();
   });
 
   test('should detect LIVE NOW status when manifest does NOT contain #EXT-X-ENDLIST', async ({ page }) => {
