@@ -83,6 +83,39 @@ test.describe('Live Stream Page', () => {
     await expect(page.locator('.event-card-compact').first()).toBeVisible();
   });
 
+  test('should sort past events descending by start date and limit to top 5', async ({ page }) => {
+    const multiPastEvents = [
+      { id: 'p1', title: 'Past Stream 2021', start_utc: '2021-01-01T12:00:00Z', start: '2021-01-01T12:00:00Z' },
+      { id: 'p2', title: 'Past Stream 2022', start_utc: '2022-01-01T12:00:00Z', start: '2022-01-01T12:00:00Z' },
+      { id: 'p3', title: 'Past Stream 2023', start_utc: '2023-01-01T12:00:00Z', start: '2023-01-01T12:00:00Z' },
+      { id: 'p4', title: 'Past Stream 2024-01', start_utc: '2024-01-01T12:00:00Z', start: '2024-01-01T12:00:00Z' },
+      { id: 'p5', title: 'Past Stream 2024-02', start_utc: '2024-02-01T12:00:00Z', start: '2024-02-01T12:00:00Z' },
+      { id: 'p6', title: 'Past Stream 2024-03', start_utc: '2024-03-01T12:00:00Z', start: '2024-03-01T12:00:00Z' },
+      { id: 'p7', title: 'Past Stream 2024-04', start_utc: '2024-04-01T12:00:00Z', start: '2024-04-01T12:00:00Z' },
+    ];
+
+    await page.route('**/relay?action=odata*', route => {
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ success: true, data: multiPastEvents })
+      });
+    });
+
+    await page.goto('/live/');
+    await page.locator('#btnFilterPast').click();
+
+    const cards = page.locator('.event-card-compact');
+    await expect(cards).toHaveCount(5);
+
+    // Most recent (p7: 2024-04) should be first
+    await expect(cards.nth(0)).toContainText('Past Stream 2024-04');
+    await expect(cards.nth(1)).toContainText('Past Stream 2024-03');
+    await expect(cards.nth(2)).toContainText('Past Stream 2024-02');
+    await expect(cards.nth(3)).toContainText('Past Stream 2024-01');
+    await expect(cards.nth(4)).toContainText('Past Stream 2023');
+  });
+
   test('should detect OFFLINE status and display Next Stream Countdown overlay when manifest contains #EXT-X-ENDLIST', async ({ page }) => {
     // Intercept m3u8 fetch and return static manifest with #EXT-X-ENDLIST
     await page.route('**/*.m3u8*', route => {
