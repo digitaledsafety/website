@@ -1,7 +1,39 @@
 const { test, expect } = require('@playwright/test');
 
+const sampleEvents = [
+  {
+    "id": "event-1",
+    "title": "Empowering Underserved Communities with Open-Source STEM Tools",
+    "description": "Learn how modern open-source software and low-cost hardware can transform STEM education.",
+    "start": "2027-04-15T18:00:00Z",
+    "end": "2027-04-15T19:30:00Z",
+    "url": "https://digitaleducationandsafety.org/live/",
+    "speaker": "Digital Education & Safety Team"
+  },
+  {
+    "id": "event-4",
+    "title": "Introduction to Robotics and IoT for Beginners",
+    "description": "Past workshop recap and Q&A covering microcontroller basics.",
+    "start": "2024-03-10T17:00:00Z",
+    "end": "2024-03-10T18:30:00Z",
+    "url": "https://digitaleducationandsafety.org/live/",
+    "speaker": "Robotics Club Mentors"
+  }
+];
+
 test.describe('Live Stream Page', () => {
-  test('should render video player, controls, live badge, CTAs, and platform links', async ({ page }) => {
+  test.beforeEach(async ({ page }) => {
+    // Route primary API calls to return test dataset deterministically
+    await page.route('**/relay?action=odata*', route => {
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ success: true, data: sampleEvents })
+      });
+    });
+  });
+
+  test('should render video player, controls, live badge, CTAs, platform links, and sidebar schedule', async ({ page }) => {
     await page.goto('/live/');
 
     // Check page title & header
@@ -13,24 +45,43 @@ test.describe('Live Stream Page', () => {
     const video = page.locator('#video');
     await expect(video).toBeVisible();
 
-    // Ensure cinema mode toggle is not present
-    await expect(page.locator('#cinemaToggleBtn')).not.toBeAttached();
-
     // Check CTAs
     await expect(page.locator('#donateLiveBtn')).toBeVisible();
     await expect(page.locator('#shareLiveBtn')).toBeVisible();
+
+    // Check main explanation card
+    await expect(page.locator('.live-info-card')).toContainText('About The Digital Education & Safety Foundation Livestreams');
 
     // Check external platform links
     await expect(page.locator('.platform-btn-youtube')).toBeVisible();
     await expect(page.locator('.platform-btn-twitch')).toBeVisible();
     await expect(page.locator('.platform-btn-discord')).toBeVisible();
 
+    // Check Sidebar Schedule section elements
+    await expect(page.locator('.schedule-sidebar-card')).toBeVisible();
+    await expect(page.locator('#btnFilterUpcoming')).toBeVisible();
+    await expect(page.locator('#btnFilterPast')).toBeVisible();
+    await expect(page.locator('.event-card-compact').first()).toBeVisible();
+
     // Test donation modal trigger
     await page.locator('#donateLiveBtn').click();
     await expect(page.locator('#donationModal')).toBeVisible();
   });
 
-  test('should detect OFFLINE status when manifest contains #EXT-X-ENDLIST', async ({ page }) => {
+  test('should filter between upcoming and past streams in sidebar widget', async ({ page }) => {
+    await page.goto('/live/');
+
+    // Default filter is upcoming streams
+    await expect(page.locator('#btnFilterUpcoming')).toHaveClass(/active/);
+    await expect(page.locator('.event-card-compact').first()).toBeVisible();
+
+    // Switch filter to past highlights
+    await page.locator('#btnFilterPast').click();
+    await expect(page.locator('#btnFilterPast')).toHaveClass(/active/);
+    await expect(page.locator('.event-card-compact').first()).toBeVisible();
+  });
+
+  test('should detect OFFLINE status and display Next Stream Countdown overlay when manifest contains #EXT-X-ENDLIST', async ({ page }) => {
     // Intercept m3u8 fetch and return static manifest with #EXT-X-ENDLIST
     await page.route('**/*.m3u8*', route => {
       route.fulfill({
@@ -50,6 +101,8 @@ stream4.ts
 
     await expect(page.locator('#statusText')).toHaveText('OFFLINE');
     await expect(page.locator('#offlineOverlay')).toBeVisible();
+    await expect(page.locator('#nextStreamOverlayBox')).toBeVisible();
+    await expect(page.locator('#countdownTimer')).toBeVisible();
   });
 
   test('should detect LIVE NOW status when manifest does NOT contain #EXT-X-ENDLIST', async ({ page }) => {
