@@ -816,10 +816,15 @@ permalink: /live/
       if (!container) return;
 
       const now = new Date();
-      const filtered = eventsData.filter(ev => {
+      let filtered = eventsData.filter(ev => {
         const evDate = new Date(ev.startIso);
         return currentFilter === 'upcoming' ? evDate >= now : evDate < now;
       });
+
+      if (currentFilter === 'past') {
+        filtered.sort((a, b) => new Date(b.startIso) - new Date(a.startIso));
+        filtered = filtered.slice(0, 5);
+      }
 
       if (filtered.length === 0) {
         container.innerHTML = `
