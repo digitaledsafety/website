@@ -667,7 +667,7 @@ permalink: /live/
 
       const startIso = ev.startIso || getEventStartIso(ev);
       const startUtc = formatISODateTimeForCal(startIso);
-      const endUtc = formatISODateTimeForCal(ev.end ? getEventStartIso({start: ev.end}) : startIso);
+      const endUtc = formatISODateTimeForCal(ev.end ? getEventStartIso({start_utc: ev.end, start: ev.end}) : startIso);
 
       const icsContent = [
         'BEGIN:VCALENDAR',
@@ -726,7 +726,8 @@ permalink: /live/
           if (line.startsWith('DESCRIPTION:')) ev.description = line.replace('DESCRIPTION:', '').trim();
           if (line.startsWith('DTSTART:')) {
             const raw = line.replace('DTSTART:', '').trim();
-            ev.start = parseIcsDateString(raw);
+            ev.start_utc = parseIcsDateString(raw);
+            ev.start = ev.start_utc;
           }
           if (line.startsWith('DTEND:')) {
             const raw = line.replace('DTEND:', '').trim();
@@ -736,7 +737,7 @@ permalink: /live/
           if (line.startsWith('UID:')) ev.id = line.replace('UID:', '').trim();
         });
 
-        if (ev.title && ev.start) {
+        if (ev.title && (ev.start_utc || ev.start)) {
           if (!ev.id) ev.id = 'ics-event-' + i;
           parsedEvents.push(ev);
         }
@@ -759,10 +760,11 @@ permalink: /live/
 
     function getEventStartIso(ev) {
       if (ev.start_formatted) return ev.start_formatted;
-      if (ev.start) {
-        if (ev.start.includes('T')) return ev.start;
+      const startVal = ev.start_utc || ev.start;
+      if (startVal) {
+        if (startVal.includes('T')) return startVal;
         // Handle M/D/YYYY HH:MM:SS format
-        const dateObj = new Date(ev.start);
+        const dateObj = new Date(startVal);
         if (!isNaN(dateObj.getTime())) return dateObj.toISOString();
       }
       return new Date().toISOString();
