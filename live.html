@@ -638,36 +638,23 @@ permalink: /live/
     // Date & Timezone Helper
     function getUserTimezoneName() {
       try {
-        return Intl.DateTimeFormat().resolvedOptions().timeZone;
+        return Intl.DateTimeFormat().resolvedOptions().timeZone || 'Local Time';
       } catch(e) {
-        return undefined;
+        return 'Local Time';
       }
     }
 
     function formatFormattedDateTime(isoString) {
       const date = new Date(isoString);
       if (isNaN(date.getTime())) return isoString;
-
-      const userTimeZone = getUserTimezoneName();
-      const options = {
+      return date.toLocaleString(undefined, {
         weekday: 'short',
         month: 'short',
         day: 'numeric',
         hour: 'numeric',
         minute: '2-digit',
         timeZoneName: 'short'
-      };
-
-      if (userTimeZone) {
-        options.timeZone = userTimeZone;
-      }
-
-      try {
-        const formatter = new Intl.DateTimeFormat(navigator.language || 'en-US', options);
-        return formatter.format(date);
-      } catch (e) {
-        return date.toLocaleString(undefined, options);
-      }
+      });
     }
 
     function formatISODateTimeForCal(isoString) {
@@ -986,7 +973,7 @@ permalink: /live/
     // Display User Timezone
     const userTzEl = document.getElementById('userTimezone');
     if (userTzEl) {
-      userTzEl.textContent = getUserTimezoneName() || 'Local Time';
+      userTzEl.textContent = getUserTimezoneName();
     }
 
     // Check status and initialize player
