@@ -399,6 +399,9 @@ permalink: /live/
                   <div class="small text-uppercase font-weight-bold text-warning mb-1">
                     <i class="fas fa-star mr-1"></i> Next Upcoming Stream
                   </div>
+                  <div class="overlay-next-img-wrapper mb-2" style="border-radius: 8px; overflow: hidden; height: 130px; background: rgba(0,0,0,0.2);">
+                    <img id="overlayNextImg" src="/assets/img/logo.jpg" alt="Next stream preview" class="img-fluid w-100 h-100" style="object-fit: cover;" onerror="this.onerror=null;this.src='/assets/img/logo.jpg';" />
+                  </div>
                   <h6 id="overlayNextTitle" class="font-weight-bold text-white mb-1">Loading...</h6>
                   <div id="overlayNextTime" class="small text-light mb-1"></div>
 
@@ -748,6 +751,8 @@ permalink: /live/
           }
           if (line.startsWith('URL:')) ev.url = line.replace('URL:', '').trim();
           if (line.startsWith('UID:')) ev.id = line.replace('UID:', '').trim();
+          if (line.startsWith('IMAGE:')) ev.image_external = line.replace('IMAGE:', '').trim();
+          if (line.startsWith('X-IMAGE:')) ev.image_external = line.replace('X-IMAGE:', '').trim();
         });
 
         if (ev.title && (ev.start_utc || ev.start)) {
@@ -854,9 +859,14 @@ permalink: /live/
       filtered.forEach(ev => {
         const isNext = (ev.id === nextUpcomingId && currentFilter === 'upcoming');
         const formattedDate = formatFormattedDateTime(ev.startIso);
+        const imgSrc = ev.image_external || ev.image || '/assets/img/logo.jpg';
 
         html += `
           <div class="event-card-compact ${isNext ? 'featured-next' : ''}">
+            <div class="event-card-img-wrapper mb-2" style="border-radius: 8px; overflow: hidden; height: 140px; background: #f8f9fa;">
+              <img src="${imgSrc}" alt="${ev.title || ''}" class="img-fluid w-100 h-100 event-card-img" style="object-fit: cover;" onerror="this.onerror=null;this.src='/assets/img/logo.jpg';" />
+            </div>
+
             <div class="d-flex justify-content-between align-items-start mb-1">
               ${isNext ? '<span class="event-badge-next"><i class="fas fa-star mr-1"></i> Next</span>' : '<span class="small font-weight-bold text-muted">Event</span>'}
               <div class="dropdown">
@@ -899,6 +909,7 @@ permalink: /live/
       const overlayBox = document.getElementById('nextStreamOverlayBox');
       const titleEl = document.getElementById('overlayNextTitle');
       const timeEl = document.getElementById('overlayNextTime');
+      const imgEl = document.getElementById('overlayNextImg');
       const nextEv = getNextUpcomingEvent();
 
       if (!nextEv || !overlayBox) {
@@ -908,6 +919,10 @@ permalink: /live/
 
       titleEl.textContent = nextEv.title;
       timeEl.textContent = formatFormattedDateTime(nextEv.startIso);
+      if (imgEl) {
+        imgEl.src = nextEv.image_external || nextEv.image || '/assets/img/logo.jpg';
+        imgEl.alt = nextEv.title || 'Next stream preview';
+      }
       overlayBox.style.display = 'block';
 
       startCountdown(new Date(nextEv.startIso).getTime());

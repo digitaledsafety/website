@@ -9,7 +9,8 @@ const sampleEvents = [
     "start": "2027-04-15T18:00:00Z",
     "end": "2027-04-15T19:30:00Z",
     "url": "https://digitaleducationandsafety.org/live/",
-    "speaker": "Digital Education & Safety Team"
+    "speaker": "Digital Education & Safety Team",
+    "image_external": "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4"
   },
   {
     "id": "event-4",
@@ -64,6 +65,11 @@ test.describe('Live Stream Page', () => {
     await expect(page.locator('#btnFilterUpcoming')).toBeVisible();
     await expect(page.locator('#btnFilterPast')).toBeVisible();
     await expect(page.locator('.event-card-compact').first()).toBeVisible();
+
+    // Check card image rendering
+    const cardImg = page.locator('.event-card-compact .event-card-img').first();
+    await expect(cardImg).toBeVisible();
+    await expect(cardImg).toHaveAttribute('src', 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4');
 
     // Test donation modal trigger
     await page.locator('#donateLiveBtn').click();
@@ -137,6 +143,7 @@ stream4.ts
     await expect(page.locator('#statusText')).toHaveText('OFFLINE');
     await expect(page.locator('#offlineOverlay')).toBeVisible();
     await expect(page.locator('#nextStreamOverlayBox')).toBeVisible();
+    await expect(page.locator('#overlayNextImg')).toHaveAttribute('src', 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4');
     await expect(page.locator('#countdownTimer')).toBeVisible();
   });
 
