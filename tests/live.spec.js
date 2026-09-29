@@ -28,7 +28,7 @@ test.describe('Live Stream Page', () => {
       route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify(sampleEvents)
+        body: JSON.stringify({ success: true, data: sampleEvents })
       });
     });
   });

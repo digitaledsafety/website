@@ -770,8 +770,7 @@ permalink: /live/
 
     // Schedule Rendering Logic
     function fetchAndRenderEvents() {
-      const primaryApiUrl = 'https://api.digitaleducationsafety.org/v1/relay?action=odata&username=digitaledsafety&resource=events&$orderby=date_published%20desc';
-      const fallbackJsonUrl = '/assets/data/events.json';
+      const primaryApiUrl = 'https://api.digitaleducationsafety.org/v1/relay?action=odata&username=digitaledsafety&resource=events';
 
       fetch(primaryApiUrl)
         .then(res => {
@@ -780,15 +779,13 @@ permalink: /live/
           if (contentType.includes('text/calendar')) {
             return res.text().then(parseIcsText);
           }
-          if (contentType.includes('application/json') || contentType.includes('text/plain')) {
-            return res.json();
+          return res.json();
+        })
+        .then(resData => {
+          let data = resData;
+          if (resData && typeof resData === 'object' && Array.isArray(resData.data)) {
+            data = resData.data;
           }
-          throw new Error('Non-JSON response from primary API');
-        })
-        .catch(() => {
-          return fetch(fallbackJsonUrl).then(res => res.json());
-        })
-        .then(data => {
           if (typeof data === 'string' && data.includes('BEGIN:VCALENDAR')) {
             data = parseIcsText(data);
           }
