@@ -33,13 +33,19 @@ test.describe('Universal Grid System', () => {
     const cards = page.locator('#glossary-container .card');
     await expect(cards).not.toHaveCount(0, { timeout: 20000 });
 
-    // Test search
-    await page.fill('#glossary-search', 'AGI');
+    // Clear initial filter if any
+    await page.click('#glossary-clear');
+    await page.waitForTimeout(500);
+
+    // Test search for newly added PWA definition
+    await page.fill('#glossary-search', 'Progressive Web App');
     await page.waitForTimeout(1500);
 
     const filteredBySearch = page.locator('#glossary-container .card');
     const count = await filteredBySearch.count();
     expect(count).toBeGreaterThan(0);
+    const text = await filteredBySearch.first().innerText();
+    expect(text).toContain('Progressive Web App');
   });
 
   test('Organizations page search and filtering', async ({ page }) => {
