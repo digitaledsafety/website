@@ -28,9 +28,8 @@ author     : Digital Education & Safety Foundation
 
 locale: "en-US" # See available languages in _data/sitetext.yml
 
-# Removing for now since we are trying Cloudflare Zaraz
-#analytics:
-  #google: G-KEP2448L3X #Google Analytics tracking code here
+analytics:
+  google: G-KEP2448L3X #Google Analytics tracking code here
 
 ads:
   google: AW-16943605271 #Google Ads code here

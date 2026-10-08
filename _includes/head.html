@@ -1,8 +1,8 @@
 <head>
     <!-- Start cookieyes banner --> <script id="cookieyes" type="text/javascript" src="https://cdn-cookieyes.com/client_data/e5d1aa43b83c5e02146aee24/script.js"></script> <!-- End cookieyes banner -->
-    {% if site.analytics.google %}
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.analytics.google }}"></script>
+    {% if site.analytics.google or site.ads.google %}
+    <!-- Global site tag (gtag.js) - Google Analytics & Ads -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.analytics.google | default: site.ads.google }}"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
@@ -10,10 +10,14 @@
       }
       gtag("js", new Date());
   
+      {% if site.analytics.google %}
       gtag("config", "{{ site.analytics.google }}");
+      {% endif %}
+      {% if site.ads.google %}
       gtag("config", "{{ site.ads.google }}");
+      {% endif %}
     </script>
-    <!-- End Google Analytics -->
+    <!-- End Google Analytics & Ads -->
     <!-- Event snippet for Page view conversion page
     In your html page, add the snippet and call gtag_report_conversion when someone clicks on the chosen link or button. -->
     <script>
