@@ -1,12 +1,12 @@
 ---
-title: "Albert Einstein Distinguished Educator Fellowship"
+title: "Albert Einstein Fellowship"
 homepage: https://science.osti.gov/wdts/einstein
 donation_url: https://science.osti.gov/wdts/einstein
 image: /assets/img/header-bg.jpg
-tags: ["organization"]
+tags: ["Fellowship", "Teachers", "Policy"]
 
 caption:
   thumbnail: /assets/img/header-bg.jpg
 ---
 
-Supporting STEM education and innovation.
+The Albert Einstein Fellowship empowers underserved students by placing distinguished STEM educators in federal agencies to influence modern national education policy and practice.

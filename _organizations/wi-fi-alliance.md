@@ -1,12 +1,12 @@
 ---
-title: "Wi-fi Alliance"
+title: "Wi-Fi Alliance"
 homepage: https://www.wi-fi.org
 donation_url: https://www.wi-fi.org
 image: /assets/img/header-bg.jpg
-tags: ["organization"]
+tags: ["Wi-Fi", "Connectivity", "Standards"]
 
 caption:
   thumbnail: /assets/img/header-bg.jpg
 ---
 
-Supporting STEM education and innovation.
+The Wi-Fi Alliance empowers the underserved by developing and promoting modern Wi-Fi standards that ensure universal connectivity and accessible digital innovation.

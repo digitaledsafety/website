@@ -1,12 +1,12 @@
 ---
-title: "NI (formerly National Instruments)"
+title: "NI"
 homepage: https://www.ni.com
 donation_url: https://www.ni.com
 image: /assets/img/header-bg.jpg
-tags: ["organization"]
+tags: ["Engineering", "Measurement", "Technology"]
 
 caption:
   thumbnail: /assets/img/header-bg.jpg
 ---
 
-Supporting STEM education and innovation.
+NI empowers underserved students by providing access to modern engineering tools and educational programs that teach automated measurement and control.

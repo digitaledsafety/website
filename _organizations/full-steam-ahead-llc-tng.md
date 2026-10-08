@@ -1,12 +1,12 @@
 ---
-title: "FULL STEAM AHEAD LLC TNG"
-homepage: https://www.fullsteamaheadfl.com
-donation_url: https://www.fullsteamaheadfl.com
+title: "Full STEAM Ahead"
+homepage: https://www.fullsteamahead.org
+donation_url: https://www.fullsteamahead.org
 image: /assets/img/header-bg.jpg
-tags: ["organization"]
+tags: ["STEAM", "Hands-on", "Innovation"]
 
 caption:
   thumbnail: /assets/img/header-bg.jpg
 ---
 
-Supporting STEM education and innovation.
+Full STEAM Ahead empowers underserved students through hands-on workshops and digital content that blend modern STEM concepts with creative problem-solving and the arts.

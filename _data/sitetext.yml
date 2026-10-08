@@ -10,9 +10,48 @@
 # English (default)
 # -----------------
 en: &DEFAULT_EN
+  marketplace:
+    title: "Marketplace"
+    text: "Apps and Games for a Modern Education"
+    section: marketplace
+
+  marketplace_ui:
+    search_placeholder: "Search..."
+    all_label: "All Services"
+    filter_label: "Filter by Service"
+    sort_recent: "Recently Added"
+    sort_alpha: "Alphabetical"
+    platform_label: "Platform:"
+    category_label: "Category:"
+    service_label: "Service:"
+    launch_btn: "Launch"
+    download_btn: "Download"
+    build_btn: "Build"
+    webapp: "Web App"
+    no_results: "No results found matching your search."
+    clear_filters: "Clear Filters"
+    clear_filters_aria: "Clear all search and filter criteria"
+    fallback: "N/A"
+    related_title: "Related Marketplace Items"
+
+  collection_ui:
+    filter_by: "Filter by:"
+    view_details: "View Details"
+    donate: "Donate"
+    contribute: "Contribute"
+
+  donation_modal:
+    title: "Support Our Mission"
+    text: "We hope you find this tool useful! As a nonprofit, we rely on donations to keep our resources free and accessible for everyone. Would you consider a small $1 donation before you launch?"
+    donate_btn: "Donate $1"
+    launch_anyway: "No thanks, just launch"
+    thank_you_title: "Thank You!"
+    thank_you_text: "Your support makes a huge difference in empowering students with STEM education."
+    continue_btn: "Continue to App"
+
   header:
     title: "Our Mission:"
-    text: Empowering the underserved with a modern STEM/STEAM education
+    text: Empowering the underserved with a modern STEM education
     button: Learn More
     buttonlink: "#services"
 
@@ -20,26 +59,16 @@ en: &DEFAULT_EN
     title: "Services"
     text: ""
     section: services
-    list:
-      - title: "Entrepreneurship"
-        desc: "Build products using entrepreneurship principals. Gather requirements, develop, and market to the community."
-        icon: fas fa-laptop        
-      - title: "Engineering"
-        desc: "Collaborate with trained hobbyists on robotics, microcontrollers, 3d printing, and other projects."
-        icon: fas fa-cogs #find more at https://fontawesome.com/icons
-      - title: "Digital Safety"
-        desc: "Over a decade of experienced technology advocates affluent in safe online activites."
-        icon: fas fa-user-shield
  
   portfolio:
     title: "Programs"
     text: ""
-    section: portfolio
+    section: programs
     closebutton: "Close Project"
 
   resources:
-    title: "Resources"
-    text: ""
+    title: "Learning Resources"
+    text: "A collection of STEM Learning Resources"
     section: resource
     closebutton: "Close Resource"    
 
@@ -54,36 +83,36 @@ en: &DEFAULT_EN
         year: "2022"
         desc: "Working with the community on brainstorming ideas. We collaborated with friends, family, and local students for user feedback and design."
         image: assets/img/timeline/1.jpg
-        alt:
+        alt: "Community brainstorming session"
       - title: "A concept is born"
         year: "September 2022"
         desc: "Incorporated and gained tax exemption status through the IRS."
         image: assets/img/timeline/2.jpg
-        alt:
+        alt: "IRS tax exemption status confirmation"
       - title: "Beta begins"
         year: "2022-2023"
         desc: "The Foundation releases an initial product to the public."
-        image: assets/img/timeline/4.jpg
-        alt:
+        image: assets/img/timeline/6.jpg
+        alt: "Initial product release"
       - title: "Website live"
         year: "March 2023"
         desc: "The most recent iteration of the Foundation's web presence went live in March of 2023."
         image: assets/img/timeline/3.jpg
-        alt: image alt text    
+        alt: "The Digital Education & Safety Foundation website homepage"
         # you can enforce the alignment
         align: right
       - title: "Promotion"
         year: "2024"
         desc: "Establshing our portfolio and collaboration with industry."
         image: assets/img/timeline/promotion.png
-        alt: image alt text    
+        alt: "Industry collaboration and portfolio development"
         # you can enforce the alignment
         align: right    
       - title: "Into the future"
         year: "2025 and beyond"
         desc: "Keeping current with the latest trends and developments in technology is crucial to stay connected and relevant. With new technologies emerging at an unprecedented pace, it is more important than ever to stay informed and adapt quickly. Whether it's staying up-to-date with the latest software and hardware, learning new programming languages, or understanding the latest breakthroughs in AI and machine learning, staying current with technology is essential for success in today's rapidly changing world."
         image: assets/img/timeline/5.jpg
-        alt: image alt text    
+        alt: "Future technology trends"
         # you can enforce the alignment         
     end: "<a class='js-scroll-trigger' style='color: #eeeeee' href='#contact'>Join us <br>on our <br> journey!</a>"
 
@@ -93,20 +122,6 @@ en: &DEFAULT_EN
     body: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut eaque, laboriosam veritatis, quos non quis ad perspiciatis, totam corporis ea, alias ut unde. **Markdown** supported."
     section: about
 
-  clients:
-    section: clients
-    max-height: 100px
-    horizontal-scrolling: "" #"yes/no"
-    list:
-      - title: "functions.io"
-        url: https://functions.io
-        logo: assets/img/clients/functionsio.png
-      - title: "hey"
-        url: https://www.heyrj.com/
-        logo: assets/img/clients/hey.png            
-      - title: "google"
-        url: https://www.google.com/nonprofits/offerings/workspace/
-        logo: assets/img/clients/google.png
   donations:
     title: "DONATIONS"
     text: "Thank you for your support"
@@ -134,17 +149,19 @@ en: &DEFAULT_EN
   footer:
     legal: "Privacy Policy"
     terms: "Terms"
+    financials: "Financials"
     social:
       - url: https://www.youtube.com/@digitaledsafety
-        icon: "fab fa-youtube"       
-      - url: https://x.com/digitaledsafety
-        icon: "fab fa-twitter"    
-      - url: https://github.com/digitaledsafety
-        icon: "fab fa-github"        
+        icon: "fab fa-youtube"     
       - url: https://facebook.com/digitaledsafety
         icon: "fab fa-facebook-f"
-      - url: https://discord.gg/5tc2DfUZVe
-        icon: "fab fa-discord"        
+      - url: https://github.com/digitaledsafety
+        icon: "fab fa-github"    
+      - url: https://discord.gg/aHaYjHbXBJ
+        icon: "fab fa-discord"  
+      - url: https://x.com/digitaledsafety
+        icon: "fab fa-x-twitter"
+
 en-US:
   <<: *DEFAULT_EN
 en-CA:
@@ -153,9 +170,154 @@ en-GB:
   <<: *DEFAULT_EN
 en-AU:
   <<: *DEFAULT_EN
-es: 
-  <<: *DEFAULT_EN
+es: &DEFAULT_ES
+  marketplace:
+    title: "Mercado"
+    text: "Aplicaciones y Juegos para una Educación Moderna"
+    section: mercado
+
+  marketplace_ui:
+    search_placeholder: "Buscar..."
+    all_label: "Todos los Servicios"
+    filter_label: "Filtrar por servicio"
+    sort_recent: "Recientemente Añadido"
+    sort_alpha: "Alfabético"
+    platform_label: "Plataforma:"
+    category_label: "Categoría:"
+    service_label: "Servicio:"
+    launch_btn: "Lanzar"
+    download_btn: "Descargar"
+    build_btn: "Construir"
+    webapp: "Aplicación Web"
+    no_results: "No se encontraron resultados que coincidan con su búsqueda."
+    clear_filters: "Limpiar filtros"
+    clear_filters_aria: "Limpiar todos los criterios de búsqueda y filtrado"
+    fallback: "N/A"
+    related_title: "Artículos Relacionados del Mercado"
+
+  collection_ui:
+    filter_by: "Filtrar por:"
+    view_details: "Ver Detalles"
+    donate: "Donar"
+    contribute: "Contribuir"
+
+  donation_modal:
+    title: "Apoye Nuestra Misión"
+    text: "¡Esperamos que esta herramienta le sea útil! Como organización sin fines de lucro, dependemos de las donaciones para mantener nuestros recursos gratuitos y accesibles para todos. ¿Consideraría una pequeña donación de $1 antes de comenzar?"
+    donate_btn: "Donar $1"
+    launch_anyway: "No gracias, solo lanzar"
+    thank_you_title: "¡Gracias!"
+    thank_you_text: "Su apoyo marca una gran diferencia en el empoderamiento de los estudiantes con educación STEM."
+    continue_btn: "Continuar a la aplicación"
+
+  header:
+    title: "Nuestra Misión:"
+    text: Empoderar a los desatendidos con una educación STEM moderna
+    button: Aprende Más
+    buttonlink: "#services"
+
+  services:
+    title: "Servicios"
+    text: ""
+    section: servicios
+
+  portfolio:
+    title: "Programas"
+    text: ""
+    section: programas
+    closebutton: "Cerrar Proyecto"
+
+  resources:
+    title: "Recursos de Aprendizaje"
+    text: "Una colección de recursos de aprendizaje STEM"
+    section: recurso
+    closebutton: "Cerrar Recurso"
+
+  timeline:
+    title: "Hoja de Ruta"
+    text: "Cómo llegamos aquí"
+    section: timeline
+    events:
+      - title: "Donde comenzó"
+        year: "2022"
+        desc: "Trabajando con la comunidad en la lluvia de ideas. Colaboramos con amigos, familiares y estudiantes locales para obtener comentarios de los usuarios y el diseño."
+        image: assets/img/timeline/1.jpg
+        alt: "Sesión de lluvia de ideas de la comunidad"
+      - title: "Nace un concepto"
+        year: "Septiembre 2022"
+        desc: "Incoporado y obtuvo el estatus de exención de impuestos a través del IRS."
+        image: assets/img/timeline/2.jpg
+        alt: "Confirmación del estatus de exención de impuestos del IRS"
+      - title: "Comienza la Beta"
+        year: "2022-2023"
+        desc: "La Fundación lanza un producto inicial al público."
+        image: assets/img/timeline/6.jpg
+        alt: "Lanzamiento inicial del producto"
+      - title: "Sitio web en vivo"
+        year: "Marzo 2023"
+        desc: "La iteración más reciente de la presencia web de la Fundación se puso en marcha en marzo de 2023."
+        image: assets/img/timeline/3.jpg
+        alt: "La página de inicio del sitio web de Digital Education & Safety Foundation"
+        align: right
+      - title: "Promoción"
+        year: "2024"
+        desc: "Estableciendo nuestro portafolio y colaboración con la industria."
+        image: assets/img/timeline/promotion.png
+        alt: "Colaboración con la industria y desarrollo del portafolio"
+        align: right
+      - title: "Hacia el futuro"
+        year: "2025 y más allá"
+        desc: "Mantenerse al día con las últimas tendencias y desarrollos en tecnología es crucial para mantenerse conectado y relevante. Con nuevas tecnologías emergiendo a un ritmo sin precedentes, es más importante que nunca mantenerse informado y adaptarse rápidamente."
+        image: assets/img/timeline/5.jpg
+        alt: "Tendencias tecnológicas futuras"
+    end: "<a class='js-scroll-trigger' style='color: #eeeeee' href='#contact'>¡Únete <br>a nuestro <br> viaje!</a>"
+
+  about:
+    title: "Sobre Nosotros"
+    text: "nuestra historia"
+    section: about
+
+  donations:
+    title: "DONACIONES"
+    text: "Gracias por tu apoyo"
+    section: donaciones
+    list:
+      - title: PayPal
+        image: assets/img/donations/1.png
+        address: "<a href='https://paypal.me/digitaledsafety/5?country.x=US&amp;locale.x=en_US'>Donar en PayPal.me</a>"
+
+  contact:
+    title: "Contáctenos"
+    text: "<a href='mailto:hello@digitaleducationsafety.org'>Correo electrónico</a> o llame al <a href='tel:+18336925477'>+1-833-692-5477</a>"
+    section: contacto
+    name: "Nombre*"
+    name-validation: "Por favor, introduzca su nombre."
+    email: "Correo electrónico*"
+    email-validation: "Por favor, introduzca su dirección de correo electrónico."
+    phone: "Número de teléfono"
+    phone-validation: "Por favor, introduzca su número de teléfono."
+    message: "Mensaje*"
+    message-validation: "Por favor, introduzca un mensaje."
+    subject: "Envío del formulario de contacto"
+    submit: "Enviar mensaje"
+
+  footer:
+    legal: "Política de Privacidad"
+    terms: "Términos"
+    financials: "Finanzas"
+    social:
+      - url: https://www.youtube.com/@digitaledsafety
+        icon: "fab fa-youtube"
+      - url: https://facebook.com/digitaledsafety
+        icon: "fab fa-facebook-f"
+      - url: https://github.com/digitaledsafety
+        icon: "fab fa-github"
+      - url: https://discord.gg/aHaYjHbXBJ
+        icon: "fab fa-discord"
+      - url: https://x.com/digitaledsafety
+        icon: "fab fa-x-twitter"
+
 es-ES:
-  <<: *DEFAULT_EN
+  <<: *DEFAULT_ES
 es-CO:
-  <<: *DEFAULT_EN
+  <<: *DEFAULT_ES

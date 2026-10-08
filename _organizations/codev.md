@@ -1,12 +1,12 @@
 ---
-title: "CodeV"
-homepage: https://codev.org
-donation_url: https://codev.org
+title: "CoDev"
+homepage: https://codev.com
+donation_url: https://codev.com
 image: /assets/img/header-bg.jpg
-tags: ["organization"]
+tags: ["Remote Tech", "Outsourcing", "Career Development"]
 
 caption:
   thumbnail: /assets/img/header-bg.jpg
 ---
 
-Supporting STEM education and innovation.
+CoDev empowers underserved talent globally by providing remote opportunities and modern professional development in the tech industry, bridging the gap between talent and opportunity.

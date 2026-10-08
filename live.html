@@ -1,0 +1,1031 @@
+---
+layout: default
+title: Live Stream - Digital Education & Safety Foundation
+description: "Watch the Digital Education & Safety Foundation livestreams live. Learn about empowering under-served communities through modern STEM education and digital safety."
+permalink: /live/
+---
+
+{% include nav.html %}
+
+<style>
+  :root {
+    --live-bg-light: #f8f9fa;
+    --live-card-light: #ffffff;
+    --live-text-light: #212529;
+    --live-muted-light: #6c757d;
+    --live-border-light: #e9ecef;
+  }
+
+  .live-page-container {
+    padding-top: 130px;
+    padding-bottom: 80px;
+    background-color: var(--live-bg-light);
+    color: var(--live-text-light);
+    min-height: 88vh;
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+
+  .live-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+  }
+
+  .header-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .live-badge {
+    display: inline-flex;
+    align-items: center;
+    background-color: #dc3545;
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 0.4rem 0.9rem;
+    border-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 0 15px rgba(220, 53, 69, 0.6);
+    transition: all 0.3s ease;
+  }
+
+  .live-badge .pulse-dot {
+    width: 10px;
+    height: 10px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    margin-right: 8px;
+    animation: pulse 1.5s infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+    }
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 8px rgba(255, 255, 255, 0);
+    }
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    }
+  }
+
+  .player-outer-wrapper {
+    position: relative;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Ambient Glow Effect */
+  .player-ambient-glow {
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    right: 5%;
+    bottom: 5%;
+    background: linear-gradient(135deg, rgba(254, 209, 54, 0.3), rgba(220, 53, 69, 0.3));
+    filter: blur(40px);
+    border-radius: 20px;
+    opacity: 0.6;
+    transition: opacity 0.5s ease;
+    z-index: 0;
+  }
+
+  .player-wrapper {
+    position: relative;
+    background: #000000;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+  }
+
+  .video-container {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 Aspect Ratio */
+  }
+
+  .video-container video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    outline: none;
+  }
+
+  .stream-offline-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.95);
+    color: #ffffff;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem;
+    z-index: 10;
+    backdrop-filter: blur(8px);
+    overflow-y: auto;
+  }
+
+  .stream-offline-overlay i.fa-broadcast-tower {
+    font-size: 3rem;
+    color: #fed136;
+    margin-bottom: 0.5rem;
+  }
+
+  .live-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: flex-start;
+    margin-bottom: 1.75rem;
+  }
+
+  .live-actions .btn {
+    padding: 0.6rem 1.4rem;
+    font-weight: 700;
+    border-radius: 50px;
+    text-transform: uppercase;
+    font-size: 0.82rem;
+    letter-spacing: 0.5px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  }
+
+  .live-actions .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15) !important;
+  }
+
+  .live-info-card {
+    background: var(--live-card-light);
+    border-radius: 16px;
+    padding: 1.75rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    border: 1px solid var(--live-border-light);
+    transition: background-color 0.4s ease, border-color 0.4s ease;
+    margin-bottom: 1.5rem;
+  }
+
+  .platform-links-bar {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--live-border-light);
+  }
+
+  .platform-btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.75rem;
+  }
+
+  .platform-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.45rem 1.1rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.82rem;
+    text-decoration: none !important;
+    transition: all 0.25s ease;
+  }
+
+  .platform-btn-youtube {
+    background-color: #ff0000;
+    color: #ffffff !important;
+  }
+
+  .platform-btn-youtube:hover {
+    background-color: #cc0000;
+    color: #ffffff !important;
+  }
+
+  .platform-btn-twitch {
+    background-color: #9146ff;
+    color: #ffffff !important;
+  }
+
+  .platform-btn-twitch:hover {
+    background-color: #772ce8;
+    color: #ffffff !important;
+  }
+
+  .platform-btn-discord {
+    background-color: #5865f2;
+    color: #ffffff !important;
+  }
+
+  .platform-btn-discord:hover {
+    background-color: #4752c4;
+    color: #ffffff !important;
+  }
+
+  /* Compact Sidebar Schedule & Event Cards */
+  .schedule-sidebar-card {
+    background: var(--live-card-light);
+    border-radius: 16px;
+    border: 1px solid var(--live-border-light);
+    padding: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+    position: sticky;
+    top: 120px;
+  }
+
+  .schedule-sidebar-header {
+    border-bottom: 1px solid var(--live-border-light);
+    padding-bottom: 0.85rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .event-card-compact {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid var(--live-border-light);
+    padding: 1.1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+
+  .event-card-compact:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.06);
+    border-color: #fed136;
+  }
+
+  .event-card-compact.featured-next {
+    border: 2px solid #fed136;
+    background: linear-gradient(135deg, rgba(254, 209, 54, 0.08) 0%, rgba(255, 255, 255, 1) 100%);
+  }
+
+  .event-badge-next {
+    background-color: #fed136;
+    color: #212529;
+    font-weight: 700;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+  }
+
+  .event-date-box {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #dc3545;
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-bottom: 0.35rem;
+  }
+
+  /* Countdown Banner in Player Overlay */
+  .next-stream-preview {
+    margin-top: 0.5rem;
+    padding: 0.85rem 1.1rem;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    border: 1px solid rgba(254, 209, 54, 0.35);
+    max-width: 460px;
+    width: 100%;
+  }
+
+  .countdown-display {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .countdown-item {
+    background: rgba(0, 0, 0, 0.55);
+    border-radius: 6px;
+    padding: 0.3rem 0.5rem;
+    min-width: 48px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .countdown-num {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #fed136;
+    line-height: 1.1;
+  }
+
+  .countdown-label {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    color: #cbd5e1;
+    letter-spacing: 0.5px;
+  }
+
+  @media (max-width: 991.98px) {
+    .schedule-sidebar-card {
+      position: static;
+      margin-top: 2rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .live-page-container {
+      padding-top: 100px;
+    }
+    .live-info-card, .schedule-sidebar-card {
+      padding: 1.25rem;
+    }
+    .live-actions {
+      justify-content: center;
+    }
+  }
+</style>
+
+<div id="livePageContainer" class="live-page-container">
+  <div class="container-fluid px-lg-5">
+
+    <!-- Header Section -->
+    <div class="live-header">
+      <div class="header-top-bar">
+        <div id="liveStatusBadge" class="live-badge">
+          <span class="pulse-dot"></span>
+          <span id="statusText">LIVE NOW</span>
+        </div>
+      </div>
+
+      <h1 class="section-heading text-uppercase font-weight-bold mb-2">Foundation Live Stream</h1>
+      <p class="text-muted lead mb-0">Join our interactive sessions on STEM education, open-source tech, and digital safety.</p>
+    </div>
+
+    <!-- 2-Column Main Content Layout -->
+    <div class="row">
+      <!-- Left Column: Video Player, CTAs & Foundation Explanation -->
+      <div class="col-lg-8 mb-4">
+
+        <!-- Video Player Section -->
+        <div class="player-outer-wrapper">
+          <div class="player-ambient-glow"></div>
+
+          <div class="player-wrapper">
+            <div class="video-container">
+              <video id="video" controls autoplay muted playsinline poster="/assets/img/header-bg.jpg"></video>
+
+              <!-- Offline/Error Overlay -->
+              <div id="offlineOverlay" class="stream-offline-overlay">
+                <i class="fas fa-broadcast-tower"></i>
+                <h3 class="mb-1 font-weight-bold">Stream Currently Offline</h3>
+                <p class="text-muted small mb-2" style="max-width: 480px;">
+                  The livestream is not active right now. Check out our upcoming schedule in the sidebar!
+                </p>
+
+                <!-- Next Scheduled Stream Highlight in Overlay -->
+                <div id="nextStreamOverlayBox" class="next-stream-preview mb-3" style="display: none;">
+                  <div class="small text-uppercase font-weight-bold text-warning mb-1">
+                    <i class="fas fa-star mr-1"></i> Next Upcoming Stream
+                  </div>
+                  <div class="overlay-next-img-wrapper mb-2" style="border-radius: 8px; overflow: hidden; height: 130px; background: rgba(0,0,0,0.2);">
+                    <img id="overlayNextImg" src="/assets/img/logo.jpg" alt="Next stream preview" class="img-fluid w-100 h-100" style="object-fit: cover;" onerror="this.onerror=null;this.src='/assets/img/logo.jpg';" />
+                  </div>
+                  <h6 id="overlayNextTitle" class="font-weight-bold text-white mb-1">Loading...</h6>
+                  <div id="overlayNextTime" class="small text-light mb-1"></div>
+
+                  <div class="countdown-display" id="countdownTimer">
+                    <div class="countdown-item"><div class="countdown-num" id="cdDays">00</div><div class="countdown-label">Days</div></div>
+                    <div class="countdown-item"><div class="countdown-num" id="cdHours">00</div><div class="countdown-label">Hours</div></div>
+                    <div class="countdown-item"><div class="countdown-num" id="cdMins">00</div><div class="countdown-label">Mins</div></div>
+                    <div class="countdown-item"><div class="countdown-num" id="cdSecs">00</div><div class="countdown-label">Secs</div></div>
+                  </div>
+                </div>
+
+                <button id="retryStreamBtn" class="btn btn-warning font-weight-bold px-4 py-2" style="border-radius: 50px;">
+                  <i class="fas fa-redo-alt mr-2"></i> Recheck Stream Status
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive CTAs -->
+        <div class="live-actions">
+          <button id="donateLiveBtn" class="btn btn-warning shadow-sm" onclick="if(window.handleLaunch){window.handleLaunch('/#donate');} else {$('#donationModal').modal('show');}">
+            <i class="fas fa-heart mr-2 text-danger"></i> Support Our Mission
+          </button>
+          <a href="/#marketplace" class="btn btn-secondary shadow-sm">
+            <i class="fas fa-th mr-2"></i> Explore Programs
+          </a>
+          <button id="shareLiveBtn" class="btn btn-outline-primary shadow-sm">
+            <i class="fas fa-share-alt mr-2"></i> Share Stream
+          </button>
+        </div>
+
+        <!-- Main Explanation Card: About Foundation Livestreaming -->
+        <div class="live-info-card">
+          <h4 class="mb-3 font-weight-bold text-dark">About The Digital Education & Safety Foundation Livestreams</h4>
+          <p class="text-muted mb-3">
+            The Digital Education & Safety Foundation is dedicated to empowering underserved communities with modern STEM education and digital safety tools. Our interactive livestreams feature hands-on tech tutorials, open-source project showcases, live program updates, and community Q&A sessions.
+          </p>
+
+          <!-- External Platforms Bar -->
+          <div class="platform-links-bar">
+            <h5 class="font-weight-bold mb-2">Also Watch On External Platforms</h5>
+            <p class="text-muted small mb-2">Prefer watching or chatting on your favorite platform? Catch our stream and community discussions on:</p>
+            <div class="platform-btn-group">
+              <a href="https://www.youtube.com/@digitaledsafety" target="_blank" rel="noopener noreferrer" class="platform-btn platform-btn-youtube">
+                <i class="fab fa-youtube mr-2"></i> YouTube Live
+              </a>
+              <a href="https://www.twitch.tv/digitaledsafety" target="_blank" rel="noopener noreferrer" class="platform-btn platform-btn-twitch">
+                <i class="fab fa-twitch mr-2"></i> Twitch
+              </a>
+              <a href="https://discord.gg/digitaledsafety" target="_blank" rel="noopener noreferrer" class="platform-btn platform-btn-discord">
+                <i class="fab fa-discord mr-2"></i> Discord Community
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Compact Schedule Sidebar / Calendar Widget -->
+      <div class="col-lg-4">
+        <div class="schedule-sidebar-card">
+          <div class="schedule-sidebar-header">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h5 class="font-weight-bold text-dark mb-0">
+                <i class="fas fa-calendar-alt text-warning mr-2"></i>Upcoming Events
+              </h5>
+              <div class="btn-group btn-group-toggle" id="filterToggleGroup">
+                <button class="btn btn-warning btn-sm active font-weight-bold px-2 py-1" id="btnFilterUpcoming" style="font-size: 0.75rem;">Upcoming</button>
+                <button class="btn btn-outline-secondary btn-sm font-weight-bold px-2 py-1" id="btnFilterPast" style="font-size: 0.75rem;">Past</button>
+              </div>
+            </div>
+            <p class="text-muted small mb-0">Times formatted for <span id="userTimezone" class="font-weight-bold">Detecting...</span></p>
+          </div>
+
+          <div id="eventsListContainer">
+            <div class="text-center py-4 text-muted">
+              <i class="fas fa-spinner fa-spin fa-2x mb-2 text-warning"></i>
+              <p class="mb-0 small">Loading schedule...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+{% include donation_modal.html %}
+
+<!-- HLS.js Library -->
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script>
+  (function() {
+    const video = document.getElementById('video');
+    const streamUrl = 'https://myhlsfiledrop.blob.core.windows.net/hls/stream.m3u8';
+    const offlineOverlay = document.getElementById('offlineOverlay');
+    const retryBtn = document.getElementById('retryStreamBtn');
+    const shareBtn = document.getElementById('shareLiveBtn');
+    const statusBadge = document.getElementById('liveStatusBadge');
+    const statusText = document.getElementById('statusText');
+
+    let hls = null;
+    let pollTimer = null;
+    let countdownInterval = null;
+    let eventsData = [];
+    let currentFilter = 'upcoming';
+
+    // Stream Status Handlers
+    function showOfflineState() {
+      if (offlineOverlay) offlineOverlay.style.display = 'flex';
+      if (statusBadge) {
+        statusBadge.style.backgroundColor = '#6c757d';
+        statusBadge.style.boxShadow = 'none';
+      }
+      if (statusText) statusText.textContent = 'OFFLINE';
+    }
+
+    function showLiveState() {
+      if (offlineOverlay) offlineOverlay.style.display = 'none';
+      if (statusBadge) {
+        statusBadge.style.backgroundColor = '#dc3545';
+        statusBadge.style.boxShadow = '0 0 15px rgba(220, 53, 69, 0.6)';
+      }
+      if (statusText) statusText.textContent = 'LIVE NOW';
+    }
+
+    function stopPlayerAndShowOffline() {
+      showOfflineState();
+      if (hls) {
+        hls.destroy();
+        hls = null;
+      }
+      if (video) {
+        video.pause();
+        video.removeAttribute('src');
+        video.load();
+      }
+    }
+
+    function scheduleNextCheck() {
+      if (pollTimer) clearTimeout(pollTimer);
+      pollTimer = setTimeout(checkLiveStatusAndInit, 10000);
+    }
+
+    function checkLiveStatusAndInit() {
+      const cacheBustUrl = streamUrl + (streamUrl.includes('?') ? '&' : '?') + '_t=' + Date.now();
+
+      fetch(cacheBustUrl)
+        .then(function(response) {
+          if (!response.ok) {
+            throw new Error('HTTP status ' + response.status);
+          }
+          return response.text();
+        })
+        .then(function(manifestText) {
+          if (manifestText.includes('#EXT-X-ENDLIST')) {
+            stopPlayerAndShowOffline();
+            scheduleNextCheck();
+          } else {
+            if (pollTimer) {
+              clearTimeout(pollTimer);
+              pollTimer = null;
+            }
+            showLiveState();
+            initPlayer();
+          }
+        })
+        .catch(function(err) {
+          console.warn('Error checking stream manifest:', err);
+          stopPlayerAndShowOffline();
+          scheduleNextCheck();
+        });
+    }
+
+    function initPlayer() {
+      if (Hls.isSupported()) {
+        if (hls) {
+          hls.destroy();
+        }
+        hls = new Hls({
+          manifestLoadingTimeOut: 10000,
+          manifestLoadingMaxRetry: 3
+        });
+        hls.loadSource(streamUrl);
+        hls.attachMedia(video);
+
+        hls.on(Hls.Events.MANIFEST_PARSED, function() {
+          video.play().catch(function(err) {
+            console.log('Autoplay blocked or awaiting interaction:', err);
+          });
+        });
+
+        hls.on(Hls.Events.ERROR, function(event, data) {
+          if (data.fatal) {
+            switch (data.type) {
+              case Hls.ErrorTypes.NETWORK_ERROR:
+                console.warn('Fatal network error encountered');
+                stopPlayerAndShowOffline();
+                scheduleNextCheck();
+                break;
+              case Hls.ErrorTypes.MEDIA_ERROR:
+                console.warn('Fatal media error encountered, recovering...');
+                hls.recoverMediaError();
+                break;
+              default:
+                console.warn('Unrecoverable error encountered');
+                stopPlayerAndShowOffline();
+                scheduleNextCheck();
+                break;
+            }
+          }
+        });
+
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = streamUrl;
+        video.addEventListener('loadedmetadata', function() {
+          video.play().catch(function(err) {
+            console.log('Autoplay blocked:', err);
+          });
+        });
+
+        video.addEventListener('error', function() {
+          stopPlayerAndShowOffline();
+          scheduleNextCheck();
+        });
+      } else {
+        stopPlayerAndShowOffline();
+        scheduleNextCheck();
+      }
+    }
+
+    // Date & Timezone Helper
+    function getUserTimezoneName() {
+      try {
+        return Intl.DateTimeFormat().resolvedOptions().timeZone;
+      } catch(e) {
+        return undefined;
+      }
+    }
+
+    function formatFormattedDateTime(isoString) {
+      const date = new Date(isoString);
+      if (isNaN(date.getTime())) return isoString;
+
+      const userTimeZone = getUserTimezoneName();
+      const options = {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        timeZoneName: 'short'
+      };
+
+      if (userTimeZone) {
+        options.timeZone = userTimeZone;
+      }
+
+      try {
+        const formatter = new Intl.DateTimeFormat(navigator.language || 'en-US', options);
+        return formatter.format(date);
+      } catch (e) {
+        return date.toLocaleString(undefined, options);
+      }
+    }
+
+    function formatISODateTimeForCal(isoString) {
+      const date = new Date(isoString);
+      if (isNaN(date.getTime())) return '';
+      return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    }
+
+    // Calendar Integration Helpers
+    window.downloadIcs = function(eventId) {
+      const ev = eventsData.find(e => e.id === eventId);
+      if (!ev) return;
+
+      const startIso = ev.startIso || getEventStartIso(ev);
+      const startUtc = formatISODateTimeForCal(startIso);
+      const endUtc = formatISODateTimeForCal(ev.end ? getEventStartIso({start_utc: ev.end, start: ev.end}) : startIso);
+
+      const icsContent = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//Digital Education & Safety Foundation//EN',
+        'BEGIN:VEVENT',
+        'UID:' + (ev.id || 'event-' + Date.now()) + '@digitaleducationandsafety.org',
+        'DTSTAMP:' + formatISODateTimeForCal(new Date().toISOString()),
+        'DTSTART:' + startUtc,
+        'DTEND:' + endUtc,
+        'SUMMARY:' + (ev.title || 'Livestream Event'),
+        'DESCRIPTION:' + (ev.description || ''),
+        'URL:' + (ev.url || window.location.href),
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ].join('\r\n');
+
+      const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.setAttribute('download', (ev.title ? ev.title.replace(/[^a-z0-9]/gi, '_') : 'event') + '.ics');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    };
+
+    window.openGoogleCal = function(eventId) {
+      const ev = eventsData.find(e => e.id === eventId);
+      if (!ev) return;
+
+      const startIso = ev.startIso || getEventStartIso(ev);
+      const startUtc = formatISODateTimeForCal(startIso);
+      const endUtc = formatISODateTimeForCal(ev.end ? getEventStartIso({start: ev.end}) : startIso);
+
+      const gcalUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+        '&text=' + encodeURIComponent(ev.title || '') +
+        '&dates=' + startUtc + '/' + endUtc +
+        '&details=' + encodeURIComponent((ev.description || '') + '\n\nWatch Live: ' + (ev.url || window.location.href)) +
+        '&location=' + encodeURIComponent(ev.url || window.location.href);
+
+      window.open(gcalUrl, '_blank', 'noopener,noreferrer');
+    };
+
+    // ICS Feed Text Parser (Supports RFC 5545 fallback)
+    function parseIcsText(icsData) {
+      const parsedEvents = [];
+      const eventBlocks = icsData.split('BEGIN:VEVENT');
+
+      for (let i = 1; i < eventBlocks.length; i++) {
+        const block = eventBlocks[i].split('END:VEVENT')[0];
+        const lines = block.split(/\r?\n/);
+        const ev = {};
+
+        lines.forEach(line => {
+          if (line.startsWith('SUMMARY:')) ev.title = line.replace('SUMMARY:', '').trim();
+          if (line.startsWith('DESCRIPTION:')) ev.description = line.replace('DESCRIPTION:', '').trim();
+          if (line.startsWith('DTSTART:')) {
+            const raw = line.replace('DTSTART:', '').trim();
+            ev.start_utc = parseIcsDateString(raw);
+            ev.start = ev.start_utc;
+          }
+          if (line.startsWith('DTEND:')) {
+            const raw = line.replace('DTEND:', '').trim();
+            ev.end = parseIcsDateString(raw);
+          }
+          if (line.startsWith('URL:')) ev.url = line.replace('URL:', '').trim();
+          if (line.startsWith('UID:')) ev.id = line.replace('UID:', '').trim();
+          if (line.startsWith('IMAGE:')) ev.image_external = line.replace('IMAGE:', '').trim();
+          if (line.startsWith('X-IMAGE:')) ev.image_external = line.replace('X-IMAGE:', '').trim();
+        });
+
+        if (ev.title && (ev.start_utc || ev.start)) {
+          if (!ev.id) ev.id = 'ics-event-' + i;
+          parsedEvents.push(ev);
+        }
+      }
+      return parsedEvents;
+    }
+
+    function parseIcsDateString(str) {
+      if (str.length >= 15) {
+        const y = str.substring(0, 4);
+        const m = str.substring(4, 6);
+        const d = str.substring(6, 8);
+        const h = str.substring(9, 11);
+        const min = str.substring(11, 13);
+        const s = str.substring(13, 15);
+        return `${y}-${m}-${d}T${h}:${min}:${s}Z`;
+      }
+      return new Date().toISOString();
+    }
+
+    function getEventStartIso(ev) {
+      if (ev.start_formatted) return ev.start_formatted;
+      const startVal = ev.start_utc || ev.start;
+      if (startVal) {
+        if (startVal.includes('T')) return startVal;
+        // Handle M/D/YYYY HH:MM:SS format
+        const dateObj = new Date(startVal);
+        if (!isNaN(dateObj.getTime())) return dateObj.toISOString();
+      }
+      return new Date().toISOString();
+    }
+
+    // Schedule Rendering Logic
+    function fetchAndRenderEvents() {
+      const primaryApiUrl = 'https://api.digitaleducationsafety.org/v1/relay?action=odata&username=digitaledsafety&resource=events';
+
+      fetch(primaryApiUrl)
+        .then(res => {
+          if (!res.ok) throw new Error('Primary API unavailable');
+          const contentType = res.headers.get('content-type') || '';
+          if (contentType.includes('text/calendar')) {
+            return res.text().then(parseIcsText);
+          }
+          return res.json();
+        })
+        .then(resData => {
+          let data = resData;
+          if (resData && typeof resData === 'object' && Array.isArray(resData.data)) {
+            data = resData.data;
+          }
+          if (typeof data === 'string' && data.includes('BEGIN:VCALENDAR')) {
+            data = parseIcsText(data);
+          }
+          eventsData = Array.isArray(data) ? data : [];
+          // Normalize start date field
+          eventsData.forEach(ev => {
+            ev.startIso = getEventStartIso(ev);
+          });
+          // Sort chronologically
+          eventsData.sort((a, b) => new Date(a.startIso) - new Date(b.startIso));
+
+          renderEventsList();
+          setupNextStreamOverlayHighlight();
+        })
+        .catch(err => {
+          console.warn('Error loading schedule:', err);
+          const container = document.getElementById('eventsListContainer');
+          if (container) {
+            container.innerHTML = '<div class="alert alert-light text-center small">Unable to load schedule.</div>';
+          }
+        });
+    }
+
+    function renderEventsList() {
+      const container = document.getElementById('eventsListContainer');
+      if (!container) return;
+
+      const now = new Date();
+      let filtered = eventsData.filter(ev => {
+        const evDate = new Date(ev.startIso);
+        return currentFilter === 'upcoming' ? evDate >= now : evDate < now;
+      });
+
+      if (currentFilter === 'past') {
+        filtered.sort((a, b) => new Date(b.startIso) - new Date(a.startIso));
+        filtered = filtered.slice(0, 5);
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-3 bg-white rounded-lg border text-muted small">
+            <i class="fas fa-calendar-times mb-1"></i>
+            <p class="mb-0">No ${currentFilter} events found.</p>
+          </div>`;
+        return;
+      }
+
+      let html = '';
+      const nextUpcomingId = getNextUpcomingEvent() ? getNextUpcomingEvent().id : null;
+
+      filtered.forEach(ev => {
+        const isNext = (ev.id === nextUpcomingId && currentFilter === 'upcoming');
+        const formattedDate = formatFormattedDateTime(ev.startIso);
+        const imgSrc = ev.image_external || ev.image || '/assets/img/logo.jpg';
+
+        html += `
+          <div class="event-card-compact ${isNext ? 'featured-next' : ''}">
+            <div class="event-card-img-wrapper mb-2" style="border-radius: 8px; overflow: hidden; height: 140px; background: #f8f9fa;">
+              <img src="${imgSrc}" alt="${ev.title || ''}" class="img-fluid w-100 h-100 event-card-img" style="object-fit: cover;" onerror="this.onerror=null;this.src='/assets/img/logo.jpg';" />
+            </div>
+
+            <div class="d-flex justify-content-between align-items-start mb-1">
+              ${isNext ? '<span class="event-badge-next"><i class="fas fa-star mr-1"></i> Next</span>' : '<span class="small font-weight-bold text-muted">Event</span>'}
+              <div class="dropdown">
+                <button class="btn btn-xs btn-link text-secondary p-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Add to Calendar">
+                  <i class="far fa-calendar-plus text-warning"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right shadow-sm" style="font-size: 0.8rem;">
+                  <button class="dropdown-item" onclick="window.downloadIcs('${ev.id}')">
+                    <i class="far fa-file-alt mr-2 text-primary"></i> Download .ics File
+                  </button>
+                  <button class="dropdown-item" onclick="window.openGoogleCal('${ev.id}')">
+                    <i class="fab fa-google mr-2 text-danger"></i> Google Calendar
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="event-date-box">
+              <i class="far fa-clock"></i>
+              <span>${formattedDate}</span>
+            </div>
+
+            <h6 class="font-weight-bold text-dark mb-1" style="font-size: 0.92rem; line-height: 1.3;">${ev.title}</h6>
+            <p class="text-muted small mb-2" style="font-size: 0.8rem; line-height: 1.35;">${ev.description || ''}</p>
+
+            ${ev.speaker ? `<div class="small text-secondary font-weight-bold"><i class="fas fa-user-circle mr-1"></i> ${ev.speaker}</div>` : ''}
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function getNextUpcomingEvent() {
+      const now = new Date();
+      return eventsData.find(ev => new Date(ev.startIso) >= now) || null;
+    }
+
+    function setupNextStreamOverlayHighlight() {
+      const overlayBox = document.getElementById('nextStreamOverlayBox');
+      const titleEl = document.getElementById('overlayNextTitle');
+      const timeEl = document.getElementById('overlayNextTime');
+      const imgEl = document.getElementById('overlayNextImg');
+      const nextEv = getNextUpcomingEvent();
+
+      if (!nextEv || !overlayBox) {
+        if (overlayBox) overlayBox.style.display = 'none';
+        return;
+      }
+
+      titleEl.textContent = nextEv.title;
+      timeEl.textContent = formatFormattedDateTime(nextEv.startIso);
+      if (imgEl) {
+        imgEl.src = nextEv.image_external || nextEv.image || '/assets/img/logo.jpg';
+        imgEl.alt = nextEv.title || 'Next stream preview';
+      }
+      overlayBox.style.display = 'block';
+
+      startCountdown(new Date(nextEv.startIso).getTime());
+    }
+
+    function startCountdown(targetTimestamp) {
+      if (countdownInterval) clearInterval(countdownInterval);
+
+      function update() {
+        const now = Date.now();
+        const diff = targetTimestamp - now;
+
+        if (diff <= 0) {
+          clearInterval(countdownInterval);
+          document.getElementById('cdDays').textContent = '00';
+          document.getElementById('cdHours').textContent = '00';
+          document.getElementById('cdMins').textContent = '00';
+          document.getElementById('cdSecs').textContent = '00';
+          return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+        document.getElementById('cdDays').textContent = String(days).padStart(2, '0');
+        document.getElementById('cdHours').textContent = String(hours).padStart(2, '0');
+        document.getElementById('cdMins').textContent = String(mins).padStart(2, '0');
+        document.getElementById('cdSecs').textContent = String(secs).padStart(2, '0');
+      }
+
+      update();
+      countdownInterval = setInterval(update, 1000);
+    }
+
+    // Filter Listeners
+    const btnUpcoming = document.getElementById('btnFilterUpcoming');
+    const btnPast = document.getElementById('btnFilterPast');
+
+    if (btnUpcoming && btnPast) {
+      btnUpcoming.addEventListener('click', function() {
+        currentFilter = 'upcoming';
+        btnUpcoming.classList.add('btn-warning', 'active');
+        btnUpcoming.classList.remove('btn-outline-secondary');
+        btnPast.classList.remove('btn-warning', 'active');
+        btnPast.classList.add('btn-outline-secondary');
+        renderEventsList();
+      });
+
+      btnPast.addEventListener('click', function() {
+        currentFilter = 'past';
+        btnPast.classList.add('btn-warning', 'active');
+        btnPast.classList.remove('btn-outline-secondary');
+        btnUpcoming.classList.remove('btn-warning', 'active');
+        btnUpcoming.classList.add('btn-outline-secondary');
+        renderEventsList();
+      });
+    }
+
+    // Display User Timezone
+    const userTzEl = document.getElementById('userTimezone');
+    if (userTzEl) {
+      userTzEl.textContent = getUserTimezoneName() || 'Local Time';
+    }
+
+    // Check status and initialize player
+    checkLiveStatusAndInit();
+
+    // Fetch and render schedule
+    fetchAndRenderEvents();
+
+    // Retry Button Handler
+    if (retryBtn) {
+      retryBtn.addEventListener('click', function() {
+        checkLiveStatusAndInit();
+      });
+    }
+
+    // Share Button Handler
+    if (shareBtn) {
+      shareBtn.addEventListener('click', function() {
+        const liveUrl = window.location.origin + '/live/';
+        if (navigator.share) {
+          navigator.share({
+            title: 'Digital Education & Safety Foundation Stream',
+            url: liveUrl
+          }).catch(function(e) {
+            console.log('Share canceled/failed:', e);
+          });
+        } else if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(liveUrl).then(function() {
+            const origText = shareBtn.innerHTML;
+            shareBtn.innerHTML = '<i class="fas fa-check mr-2 text-success"></i> Copied!';
+            setTimeout(function() {
+              shareBtn.innerHTML = origText;
+            }, 2000);
+          }).catch(function(err) {
+            console.error('Copy failed:', err);
+          });
+        }
+      });
+    }
+
+  })();
+</script>

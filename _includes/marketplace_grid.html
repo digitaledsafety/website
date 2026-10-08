@@ -1,0 +1,273 @@
+<style>
+  .marketplace-card {
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+  }
+  .marketplace-img-container {
+    position: relative;
+    width: 100%;
+    padding-top: 60%; /* 5:3 Aspect Ratio */
+    overflow: hidden;
+    background: #f8f9fa;
+  }
+  .marketplace-img-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .marketplace-body {
+    padding: 1.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .marketplace-title {
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
+  .marketplace-subtitle {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1rem;
+    flex-grow: 1;
+  }
+  .marketplace-meta {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .meta-item {
+    display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+    color: #555;
+    margin-bottom: 0.25rem;
+  }
+  .meta-item:last-child {
+    margin-bottom: 0;
+  }
+  .meta-item i {
+    width: 18px;
+    margin-right: 8px;
+    color: #fed136; /* Agency Theme Primary */
+    text-align: center;
+  }
+  .meta-label {
+    font-weight: 600;
+    margin-right: 4px;
+    color: #333;
+  }
+  .marketplace-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+  }
+  .btn-install {
+    border-radius: 50px;
+    padding: 0.5rem 1.5rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    transition: all 0.2s;
+  }
+  .platform-badge {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 10px;
+    background: #e9ecef;
+    color: #495057;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .service-badge {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 10px;
+    background: #fed136;
+    color: #fff;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .title-case {
+    text-transform: capitalize;
+  }
+</style>
+
+{% assign ui_data = site.data.sitetext[site.locale].marketplace_ui %}
+
+{% include embed/paypal_sdk.html %}
+{% include donation_modal.html %}
+
+<script>
+  const uiStrings = {
+    platform: {{ ui_data.platform_label | default: "Platform:" | jsonify }},
+    category: {{ ui_data.category_label | default: "Category:" | jsonify }},
+    service: {{ ui_data.service_label | default: "Service:" | jsonify }},
+    launch: {{ ui_data.launch_btn | default: "Launch" | jsonify }},
+    download: {{ ui_data.download_btn | default: "Download" | jsonify }},
+    build: {{ ui_data.build_btn | default: "Build" | jsonify }},
+    webapp: {{ ui_data.webapp | default: "Web App" | jsonify }},
+    fallback: {{ ui_data.fallback | default: "N/A" | jsonify }}
+  };
+  const serviceIcons = {
+    {% for service in site.services %}
+    {{ service.title | jsonify }}: {{ service.icon | jsonify }}{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  };
+  window.marketplaceData = [
+    {% for item in site.marketplace %}
+    {% if item.is_hidden == true or item.is_hidden == "yes" %}{% continue %}{% endif %}
+    {
+      "title": {{ item.title | jsonify }},
+      "subtitle": {{ item.subtitle | jsonify }},
+      "image": {{ item.image | jsonify }},
+      "link": {{ item.link | jsonify }},
+      "platform": {{ item.platform | default: "pwa" | jsonify }},
+      "categories": {{ item.categories | jsonify }},
+      "program": {{ item.program | jsonify }},
+      "programTitle": {% assign program_title = "" %}{% for p in site.programs %}{% assign pid = p.id | split: "/" | last | split: "." | first | plus: 0 %}{% if pid == item.program %}{% assign program_title = p.title %}{% break %}{% endif %}{% endfor %}{{ program_title | jsonify }},
+      "service": {{ item.service | default: "N/A" | jsonify }},
+      "date": {{ item.date | jsonify }},
+      "tags": {{ item.tags | jsonify }}
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ];
+
+  function createMetaItem(iconClass, label, value) {
+    const item = document.createElement('div');
+    item.classList.add('meta-item');
+
+    const icon = document.createElement('i');
+    iconClass.split(' ').forEach(cls => icon.classList.add(cls));
+    icon.setAttribute('aria-hidden', 'true');
+    item.appendChild(icon);
+
+    const labelSpan = document.createElement('span');
+    labelSpan.classList.add('meta-label');
+    labelSpan.textContent = label;
+    item.appendChild(labelSpan);
+
+    const valueSpan = document.createElement('span');
+    valueSpan.classList.add('title-case');
+    valueSpan.textContent = ' ' + value + ' ';
+    item.appendChild(valueSpan);
+
+    return item;
+  }
+
+  function renderGrid(data, container) {
+    renderGridShared(data, container, {
+      wrapperClass: 'marketplace-item-wrapper col-lg-4 col-md-6',
+      cardClass: 'marketplace-card',
+      bodyClass: 'marketplace-body',
+      renderHeader: (item, card) => {
+        const imgContainer = document.createElement('div');
+        imgContainer.classList.add('marketplace-img-container');
+        card.appendChild(imgContainer);
+
+        const img = document.createElement('img');
+        img.src = item.image;
+        img.alt = item.title;
+        imgContainer.appendChild(img);
+      },
+      renderBodyTop: (item, body) => {
+        const header = document.createElement('div');
+        header.classList.add('d-flex', 'justify-content-between', 'align-items-start');
+        body.appendChild(header);
+
+        const title = document.createElement('h5');
+        title.classList.add('marketplace-title', 'mr-2');
+        title.textContent = item.title;
+        header.appendChild(title);
+
+        const badgeContainer = document.createElement('div');
+        badgeContainer.classList.add('d-flex', 'flex-column', 'align-items-end', 'flex-shrink-0');
+        header.appendChild(badgeContainer);
+
+        const sBadge = document.createElement('span');
+        sBadge.classList.add('service-badge');
+        sBadge.textContent = item.service || uiStrings.fallback;
+        badgeContainer.appendChild(sBadge);
+      },
+      getSubtitle: (item) => item.subtitle,
+      renderBodyBottom: (item, body) => {
+        const meta = document.createElement('div');
+        meta.classList.add('marketplace-meta');
+        body.appendChild(meta);
+
+        let platformIcon = 'fas fa-globe';
+        let platformDisplay = item.platform || uiStrings.fallback;
+        if (item.platform && (item.platform.toLowerCase() === 'pwa' || item.platform.toLowerCase() === 'web app')) {
+          platformDisplay = uiStrings.webapp;
+          platformIcon = 'fas fa-globe';
+        } else if (item.platform === 'android') {
+          platformIcon = 'fab fa-android';
+        } else if (item.platform === 'github') {
+          platformIcon = 'fab fa-github';
+        }
+
+        const serviceIcon = serviceIcons[item.service] || 'fas fa-shopping-cart';
+        const displayCategories = Array.isArray(item.categories) ? item.categories.join(", ") : (item.categories || uiStrings.fallback);
+
+        meta.appendChild(createMetaItem(platformIcon, uiStrings.platform, platformDisplay));
+        meta.appendChild(createMetaItem('fas fa-tag', uiStrings.category, displayCategories));
+        meta.appendChild(createMetaItem(serviceIcon, uiStrings.service, (item.service || uiStrings.fallback).toLowerCase()));
+      },
+      renderFooter: (item, footer) => {
+        footer.classList.add('marketplace-footer');
+
+        let btnText = uiStrings.launch;
+        if (item.platform === 'android') {
+          btnText = uiStrings.download;
+        } else if (item.platform === 'github') {
+          btnText = uiStrings.build;
+        }
+
+        const actionBtn = document.createElement('a');
+        actionBtn.classList.add('btn', 'btn-primary', 'btn-install');
+        actionBtn.textContent = btnText;
+        actionBtn.setAttribute('aria-label', `${btnText} ${item.title}`);
+
+        if (!item.platform || item.platform.toLowerCase() === 'pwa' || item.platform.toLowerCase() === 'web app') {
+          actionBtn.href = 'javascript:void(0)';
+          actionBtn.classList.add('launch-trigger');
+          actionBtn.setAttribute('data-link', item.link);
+          actionBtn.onclick = () => handleLaunch(item.link);
+        } else {
+          actionBtn.href = item.link;
+          actionBtn.target = '_blank';
+          actionBtn.rel = 'noopener noreferrer';
+        }
+        footer.appendChild(actionBtn);
+      }
+    });
+  }
+</script>
+
+{% include render_grid_script.html %}
+
+{% assign service_options = "" | split: "," %}
+{% for service in site.services %}
+  {% assign service_options = service_options | push: service.title %}
+{% endfor %}
+
+{% include grid_controls.html id="marketplace" filter_options=service_options %}
+
+<div class="row" id="marketplace-container" role="list">
+  <!-- Marketplace items will be injected here -->
+</div>
+
+{% include grid_script.html id="marketplace" data_var="marketplaceData" %}
