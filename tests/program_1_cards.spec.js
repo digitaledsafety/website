@@ -1,23 +1,18 @@
 const { test, expect } = require('@playwright/test');
 
 test.describe('Program 1 Cards Verification', () => {
-  test('should display Scratch Fork and GitHub Profile cards without inline link', async ({ page }) => {
+  test('should display GitHub Profile card and restore inline Scratch link', async ({ page }) => {
     await page.goto('/programs/1.html');
 
-    // Verify inline link is not present
+    // Verify inline link is present
     const inlineHereLink = page.locator('a[href="https://scratch.digitaleducationsafety.org"]', { hasText: 'here' });
-    await expect(inlineHereLink).toHaveCount(0);
+    await expect(inlineHereLink).toBeVisible();
 
-    // Verify Scratch Fork Card
+    // Verify Scratch Fork Card is absent
     const scratchCard = page.locator('.card', { hasText: 'Scratch Fork' });
-    await expect(scratchCard).toBeVisible();
+    await expect(scratchCard).toHaveCount(0);
 
-    const scratchBtn = scratchCard.locator('a.btn');
-    await expect(scratchBtn).toBeVisible();
-    await expect(scratchBtn).toHaveAttribute('href', 'https://scratch.digitaleducationsafety.org');
-    await expect(scratchBtn).toHaveText('Launch Scratch');
-
-    // Verify GitHub Profile Card
+    // Verify GitHub Profile Card is present
     const githubCard = page.locator('.card', { hasText: 'GitHub Profile' });
     await expect(githubCard).toBeVisible();
 
