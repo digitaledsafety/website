@@ -1,0 +1,43 @@
+<!-- Navigation -->
+{% if site.locale and site.locale != "" and site.locale != nil %}
+  {% assign navigation_data = site.data.navigation[site.locale].nav %}
+{% else %}
+  {% assign navigation_data = site.data.navigation.nav %}
+{% endif %}
+
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" {% if include.background %}style="background-color: {{ include.background }}"{% endif %}>
+  <div class="container">
+    <a class="navbar-brand js-scroll-trigger" href="{{ '/' | relative_url }}#page-top">
+      <span class="d-none d-lg-block">
+        {%- if site.logo -%}
+          <img height="{{ site.logo.height | default: 52 }}" src="{{ site.logo.path | relative_url }}" alt="{{ site.title }}"/>
+        {%- else -%}
+          {{ site.title }}
+        {%- endif -%}
+      </span>
+      <span class="d-block d-lg-none">
+        <img height="40" src="{{ '/assets/img/logo-mobile.png' | relative_url }}" alt="{{ site.title }}"/>
+      </span>
+    </a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav text-uppercase ml-auto">
+      {% for link in navigation_data %}
+        <li class="nav-item">
+          {%- if link.url -%}
+            <a class="nav-link js-scroll-trigger" href="{% if link.url contains '://' or link.url == '#' %}{{ link.url }}{% else %}{{ link.url | relative_url }}{% endif %}" aria-label="{{ link.title }}">{{ link.title }}</a>
+          {%- elsif link.section -%}
+            <a class="nav-link js-scroll-trigger" href="{{ '/' | relative_url }}#{{ link.section }}" aria-label="{{ link.title }}">{{ link.title }}</a>
+          {%- else -%}
+            <a class="nav-link js-scroll-trigger" href="#" aria-label="{{ link.title }}">{{ link.title }}</a>
+          {%- endif -%}
+        </li>
+      {% endfor %}
+      {% include donate_button.html %}
+      </ul>
+    </div>
+  </div>
+</nav>
+<!-- End Navigation -->

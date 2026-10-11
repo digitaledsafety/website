@@ -1,0 +1,116 @@
+<script>
+  /**
+   * Shared card filtering and population logic.
+   * Expects a global `cardData` array and a `getCardHtml(cardObj)` function.
+   * Optional global `window.defaultFilter` for initial selection if no hash is present.
+   */
+
+  function generateFilters(data, initialFilter) {
+    const cardFiltersContainer = document.getElementById('card-filters');
+    if (!cardFiltersContainer) return;
+
+    cardFiltersContainer.innerHTML = '';
+    const fs = [];
+    data.forEach(cardObj => {
+      if (cardObj.tags && Array.isArray(cardObj.tags)) {
+        cardObj.tags.forEach(cardTag => {
+          if (cardTag && !fs.includes(cardTag)) {
+            fs.push(cardTag);
+          }
+        });
+      }
+    });
+
+    const filtersHtml = fs.sort().map(f => {
+      const isChecked = (f === initialFilter) ? 'checked' : '';
+      return `
+        <li class="pl-2">
+          <div class="form-check">
+            <input type="checkbox" ${isChecked} class="form-check-input" id="${f}">
+            <label class="form-check-label" for="${f}">${f}</label>
+          </div>
+        </li>
+      `;
+    }).join('');
+    cardFiltersContainer.innerHTML = filtersHtml;
+
+    // Add event listeners to checkboxes
+    cardFiltersContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+      cb.addEventListener('change', filterCards);
+    });
+  }
+
+  function populateCards() {
+    const cardContainer = document.getElementById('card-container');
+    if (!cardContainer) return;
+
+    let initialFilter = window.location.hash ? decodeURIComponent(window.location.hash.substring(1)) : (window.defaultFilter || null);
+
+    if (typeof generateFilters === 'function') {
+      generateFilters(cardData, initialFilter);
+    }
+
+    const cardsHtml = cardData.map(cardObj => {
+      if (typeof getCardHtml === 'function') {
+        return getCardHtml(cardObj);
+      }
+      return '';
+    }).join('');
+    cardContainer.innerHTML = cardsHtml;
+  }
+
+  function filterCards() {
+    const selectedFilters = [];
+    document.querySelectorAll('#card-filters input[type="checkbox"]:checked').forEach(cb => {
+      selectedFilters.push(cb.id);
+    });
+
+    document.querySelectorAll('.filterable-card').forEach(card => {
+      let filters = card.getAttribute('data-filters');
+      try {
+        // Try to parse as JSON if it looks like an array
+        if (filters && (filters.startsWith('[') || filters.startsWith('{'))) {
+          filters = JSON.parse(filters);
+        } else if (filters) {
+          filters = filters.split(',');
+        }
+      } catch (e) {
+        if (filters) {
+          filters = filters.split(',');
+        }
+      }
+      filters = filters || [];
+
+      let showCard = false;
+      if (selectedFilters.length === 0) {
+        showCard = true;
+      } else {
+        showCard = filters.some(filter => selectedFilters.includes(filter));
+      }
+      if (showCard) {
+        card.classList.remove('d-none');
+      } else {
+        card.classList.add('d-none');
+      }
+    });
+  }
+
+  window.addEventListener('load', function () {
+    populateCards();
+    filterCards();
+  });
+
+  window.addEventListener('hashchange', function() {
+    const newHash = decodeURIComponent(window.location.hash.substring(1));
+    if (newHash) {
+      document.querySelectorAll('#card-filters input[type="checkbox"]').forEach(cb => {
+        cb.checked = false;
+      });
+      const checkbox = document.getElementById(newHash);
+      if (checkbox) {
+        checkbox.checked = true;
+        filterCards();
+      }
+    }
+  });
+</script>

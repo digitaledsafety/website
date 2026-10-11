@@ -3,10 +3,10 @@ title: "North Mason School District"
 homepage: https://www.nmsd.wednet.edu
 donation_url: https://www.nmsd.wednet.edu
 image: /assets/img/header-bg.jpg
-tags: ["organization"]
+tags: ["Public School", "District", "STEM Pathways"]
 
 caption:
   thumbnail: /assets/img/header-bg.jpg
 ---
 
-Supporting STEM education and innovation.
+North Mason School District empowers underserved students by developing modern STEM pathways that bridge classroom learning with high-demand career opportunities.

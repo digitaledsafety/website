@@ -1,28 +1,31 @@
 <!-- Footer -->
+{% assign footer_data = site.data.sitetext[site.locale].footer | default: site.data.sitetext.footer %}
+
 <footer class="footer" id="footer" style="background-color: white">
     <div class="container">
-      {% if site.locale and site.locale != "" and site.locale != nil %}
       <div class="row align-items-center">
         <div class="col-md-4">
           <ul class="list-unstyled quicklinks">
             <li>
-              <p
-                >Copyright &copy; {{ site.title }} {{ 'now' | date: "%Y" }}</p
-              >
+              <p>Copyright &copy; {{ site.title }} {{ 'now' | date: "%Y" }}</p>
             </li>
+            {% if site.ein %}
             <li>
               <p class="ein">EIN: {{ site.ein }}</p>
             </li>
+            {% endif %}
           </ul>
         </div>
         <!-- Social Media -->
         <div class="col-md-4">
           <ul class="list-inline social-buttons">
-            {% for link in site.data.sitetext[site.locale].footer.social %}
+            {% for link in footer_data.social %}
             <li class="list-inline-item">
               {% if link.url %}
-              <a href="{{ link.url }}">
-                {% if link.icon %}<i class="{{ link.icon }}"></i>{% endif %}
+              {% assign brand = link.icon | split: ' ' | last | split: '-' | last %}
+              {% if brand == "f" %}{% assign brand = "Facebook" %}{% endif %}
+              <a href="{{ link.url }}" aria-label="{{ brand | capitalize }}">
+                {% if link.icon %}<i class="{{ link.icon }}" aria-hidden="true"></i>{% endif %}
               </a>
               {% endif %}
             </li>
@@ -33,72 +36,23 @@
         <div class="col-md-4">
           <ul class="list-inline quicklinks">          
             <li class="list-inline-item">
-              <a href="/legal"
-                >{{ site.data.sitetext[site.locale].footer.legal | default:
-                "Privacy Policy" }}</a
+              <a href="{{ '/legal' | relative_url }}"
+                >{{ footer_data.legal | default: "Privacy Policy" }}</a
               >
             </li>
             <li class="list-inline-item">
-              <a href="/terms"
-                >{{ site.data.sitetext[site.locale].footer.terms | default:
-                "Terms" }}</a
+              <a href="{{ '/terms' | relative_url }}"
+                >{{ footer_data.terms | default: "Terms" }}</a
               >
             </li>             
             <li class="list-inline-item">
-                <a href="/financials"
-                  >{{ site.data.sitetext[site.locale].footer.financials | default:
-                  "Financials" }}</a
+                <a href="{{ '/financials' | relative_url }}"
+                  >{{ footer_data.financials | default: "Financials" }}</a
                 >
             </li>                        
           </ul>
         </div>
       </div>
-      {% else %}
-      <div class="row align-items-center">
-        <div class="col-md-4">
-          <span class="copyright"
-            >Copyright &copy; {{ site.title }} {{ 'now' | date: "%Y" }}</span
-          >
-        </div>
-        <!-- Social Media -->
-        <div class="col-md-4">
-          <ul class="list-inline social-buttons">
-            {% for link in site.data.sitetext.footer.social %}
-            <li class="list-inline-item">
-              {% if link.url %}
-              <a href="{{ link.url }}">
-                {% if link.icon %}<i class="{{ link.icon }}"></i>{% endif %}
-              </a>
-              {% endif %}
-            </li>
-            {% endfor %}
-          </ul>
-        </div>
-        <!-- Legal -->
-        <div class="col-md-4">
-          <ul class="list-inline quicklinks">
-            <li class="list-inline-item">
-              <a href="/legal"
-                >{{ site.data.sitetext.footer.legal | default:
-                "Privacy Policy" }}</a
-              >
-            </li>
-            <li class="list-inline-item">
-              <a href="/terms"
-                >{{ site.data.sitetext.footer.terms | default:
-                "Terms" }}</a
-              >
-            </li>              
-            <li class="list-inline-item">
-              <a href="/financials"
-                >{{ site.data.sitetext[site.locale].footer.financials | default:
-                "Financials" }}</a
-              >
-            </li>                       
-          </ul>
-        </div>
-      </div>
-      {% endif %}
     </div>
   </footer>
   {% if page.layout == "page" %}

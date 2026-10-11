@@ -2,7 +2,7 @@
 layout: open-source
 title: Open Source
 image: /assets/img/opensource/mast.jpg
-description: "We've compiled a list of popular open source projects in industry. The Contribute button will redirect you to a contribution page with best practices on how to get started!"
+description: "Join the global movement of collaborative innovation. Explore our curated list of industry-leading open source projects and learn how you can contribute to the future of technology."
 ---
 
 <div class="col-lg-12 text-center">

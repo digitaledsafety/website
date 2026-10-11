@@ -3,10 +3,10 @@ title: "American University Game Center"
 homepage: https://www.american.edu/soc/gaming/
 donation_url: https://www.american.edu/soc/gaming/
 image: /assets/img/header-bg.jpg
-tags: ["organization"]
+tags: ["Game Design", "Higher Education", "Social Impact"]
 
 caption:
   thumbnail: /assets/img/header-bg.jpg
 ---
 
-Supporting STEM education and innovation.
+The AU Game Center empowers underserved youth by exploring modern game design as a tool for social change and providing pathways to technical careers in the gaming industry.

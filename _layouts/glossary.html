@@ -26,170 +26,85 @@ document.getElementById("page-top").className="bg-light";
 
 <div class="container py-5" id="pagecontainer">
 
-    <h2>Speak the language</h2>
+    <h2 class="mb-4">Master the Language of Innovation</h2>
 
-    <p>
-        Glossaries (or cheatsheets) are an effective method for studying new STEM/STEAM technologies. The technology industry is characterized by unique jargon, technical terms, and specialized language that serve as a common platform among professionals. These specialized vocabularies not only facilitate effective communication but also play a crucial role in understanding the intricacies of processes, and other concepts within the industry.
+    <p class="lead mb-5">
+        Unlock the complexities of the modern tech landscape. Our curated glossaries and cheatsheets bridge the gap between technical jargon and practical understanding, empowering you to communicate effectively and master the latest STEM technologies.
     </p>
 
+    <div class="row mb-5 text-center">
+        <div class="col-md-4">
+            <div class="p-3">
+                <i class="fas fa-terminal fa-2x text-primary mb-3"></i>
+                <h6>Industry Jargon</h6>
+                <p class="small text-muted">Navigate specialized vocabularies used by professionals in coding, AI, and engineering.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-3">
+                <i class="fas fa-book-open fa-2x text-primary mb-3"></i>
+                <h6>Clear Concepts</h6>
+                <p class="small text-muted">Break down intricate processes into easy-to-understand definitions and summaries.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-3">
+                <i class="fas fa-comments fa-2x text-primary mb-3"></i>
+                <h6>Fluent Collaboration</h6>
+                <p class="small text-muted">Build the confidence to contribute to technical discussions and professional teams.</p>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Example array of JavaScript objects representing card
-        const cardData = 
+        window.cardData =
         [{% for card in posts %}
         {
             "title": {{card.title | jsonify}}, 
             "tags": {{card.tags | jsonify}}, 
-            "path": {{card.id | jsonify}}, 
+            "path": {{card.url | relative_url | jsonify}},
             "abbreviations": {{card.abbreviations | jsonify}}, 
-            "description": {{card.excerpt | jsonify}}
-        },
-        {% endfor %}]
+            "description": {{card.content | strip_html | truncatewords: 30 | jsonify }},
+            "date": {{card.date | jsonify}}
+        }{% unless forloop.last %},{% endunless %}
+        {% endfor %}];
         
-      </script>
-    
-      <div class="row">
-          <!-- Filters -->
-          <div class="col-md-12">
-            <div class="btn-group">
-                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="fa fa-filter"></i> Filter by:
-                  <span class="caret"></span>
-                </a>
-                <ul id="card-filters" class="dropdown-menu">
-    
-                  <!-- dropdown menu links -->
-                </ul>
-              </div>
-              <!-- Add more filters as needed -->
-          </div>
- 
-    </div class="row">
-          <!-- List of Cards -->
-          <div class="col-md-12">
-              <div class="row" id="card-container">
-                  <!-- Cards will be dynamically populated here -->
-              </div>
-          </div>
-      </div>
-    
-    <!-- Add Bootstrap JS and jQuery for checkbox filtering -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
-    <script>
-      // Function to populate cards
-      function populateCards() {
-        const cardFiltersContainer = document.getElementById('card-filters');
-        cardFiltersContainer.innerHTML = '';
+        window.defaultFilter = '{{ page.filter | default: "AI" }}';
 
-        // Determine initial filter from URL hash or page front matter
-        let initialFilter = '{{ page.filter | default: "Web 3" }}';
-        if (window.location.hash) {
-            initialFilter = decodeURIComponent(window.location.hash.substring(1));
+        function renderGrid(data, container) {
+            renderGridShared(data, container, {
+                border: false,
+                stretchedLink: true,
+                getLinkUrl: (item) => item.path,
+                getSubtitle: (item) => Array.isArray(item.abbreviations) ? item.abbreviations.join(', ') : (item.abbreviations || ''),
+                getDescription: (item) => item.description,
+                viewDetailsText: {{ site.data.sitetext[site.locale].collection_ui.view_details | default: "View Details" | jsonify }}
+            });
         }
+      </script>
 
-        const fs = [];
-          cardData.forEach(cardObj => {
-            if (cardObj.tags) {
-                cardObj.tags.forEach(cardTag => {
-                    if(cardTag && !fs.includes(cardTag)) {
-                        fs.push(cardTag);
-                    }
-                })
-            }
-          });
+      {% include render_grid_script.html %}
     
-          fs.forEach(f => {
-            const isChecked = (f == initialFilter ? 'checked' : '');
-            const filterHtml = `
-            <li class="pl-2"><div class="form-check">
-                <input type="checkbox" ${isChecked} class="form-check-input" id="${f}">
-                <label class="form-check-label" for="${f}">${f}</label>
-            </div></li>
-              `;
-              cardFiltersContainer.innerHTML += filterHtml;
-          });
-    
-        const cardContainer = document.getElementById('card-container');
-          cardContainer.innerHTML = '';
-          cardData.forEach(cardObj => {
-              const abbrev = (cardObj.abbreviations ? cardObj.abbreviations : '');
-              const tags = cardObj.tags || [];
-              const cardHtml = `
-                  <div class="col-md-4 mb-3 filterable-card" data-filters='${JSON.stringify(tags)}'>
-                      <div class="card">
+      {% assign all_tags = "" | split: "," %}
+      {% for post in posts %}
+        {% if post.tags %}
+          {% for tag in post.tags %}
+            {% unless all_tags contains tag %}
+              {% assign all_tags = all_tags | push: tag %}
+            {% endunless %}
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+      {% assign sorted_tags = all_tags | sort %}
 
-                          <div class="card-body">
-                              <h5 class="card-title">${cardObj.title}</h5>
-                              <p class="card-subtitle">${abbrev}</p>
-                              <p class="card-text">${cardObj.description}</p>
-                              <a target="_blank" href=${cardObj.path} class="btn btn-primary stretched-link">View</a>
-                          </div>
-                      </div>
-                  </div>
-              `;
-              cardContainer.innerHTML += cardHtml;
-          });
-      }
-    
-      // Function to filter cards based on checkboxes
-      function filterCards() {
-          const selectedFilters = [];
-          // Get all selected filters
-          $('input[type="checkbox"]:checked').each(function () {
-              selectedFilters.push($(this).attr('id'));
-          });
-    
-          // Show/hide cards based on selected filters
-          $('.filterable-card').each(function () {
-              const card = $(this);
-              const filters = card.data('filters') || [];
-              const cleanFilters = filters.filter(f => f && f !== "");
+      {% include grid_controls.html id="glossary" filter_options=sorted_tags %}
 
-              let showCard = false;
-              if (selectedFilters.length === 0) {
-                  showCard = true; // Show all if no filter is selected
-              } else {
-                  showCard = cleanFilters.some(filter => selectedFilters.includes(filter));
-              }
+      <div class="row" id="glossary-container" role="list">
+          <!-- Cards will be dynamically populated here -->
+      </div>
 
-              card.toggleClass('d-none', !showCard);
-          });
-      }
-    
-      // Initialize filtering on page load and when checkboxes change
-      $(document).ready(function () {   
-          populateCards();
-    
-          $('input[type="checkbox"]').change(filterCards);      
-    
-          filterCards();
-      });
-
-      // Handle hash change for dynamic filtering without reload
-      window.addEventListener('hashchange', function() {
-          const newHash = decodeURIComponent(window.location.hash.substring(1));
-          if (newHash) {
-              $('input[type="checkbox"]').prop('checked', false);
-              const checkbox = document.getElementById(newHash);
-              if (checkbox) {
-                  checkbox.checked = true;
-                  filterCards();
-              }
-          }
-      });
-    </script>
-    
-    
-    
-    
+      {% include grid_script.html id="glossary" data_var="cardData" %}
     
 </div>
 
 {% include contact.html %}
-
-
-
-
-
-
-

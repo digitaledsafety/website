@@ -1,12 +1,12 @@
 ---
-title: "IDRA & Lead of the Alamo STEM Ecosystem"
+title: "IDRA (Alamo STEM Ecosystem)"
 homepage: https://www.idra.org
-donation_url: https://www.idra.org
+donation_url: https://www.idra.org/donate/
 image: /assets/img/header-bg.jpg
-tags: ["organization"]
+tags: ["Equity", "Ecosystem", "Hispanic Education"]
 
 caption:
   thumbnail: /assets/img/header-bg.jpg
 ---
 
-Supporting STEM education and innovation.
+IDRA empowers underserved students by leading the Alamo STEM Ecosystem to provide equitable access to modern, high-quality STEM education for minority and low-income youth.
