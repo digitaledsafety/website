@@ -149,6 +149,25 @@ permalink: /live/
     margin-bottom: 0.5rem;
   }
 
+  .live-stream-alert-banner {
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(15, 23, 42, 0.9);
+    color: #ffffff;
+    padding: 0.5rem 1.25rem;
+    border-radius: 50px;
+    border: 1px solid #dc3545;
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.88rem;
+    font-weight: 600;
+  }
+
   .live-actions {
     display: flex;
     flex-wrap: wrap;
@@ -386,6 +405,14 @@ permalink: /live/
             <div class="video-container">
               <video id="video" controls autoplay muted playsinline poster="/assets/img/header-bg.jpg"></video>
 
+              <!-- Live Stream Alert Banner when playing past stream -->
+              <div id="liveAlertBanner" class="live-stream-alert-banner" style="display: none;">
+                <span><i class="fas fa-broadcast-tower text-danger mr-1"></i> Livestream is now Live!</span>
+                <button id="switchToLiveBtn" class="btn btn-danger btn-sm font-weight-bold ml-2" style="border-radius: 50px;">
+                  <i class="fas fa-play mr-1"></i> Switch to Live
+                </button>
+              </div>
+
               <!-- Offline/Error Overlay -->
               <div id="offlineOverlay" class="stream-offline-overlay">
                 <i class="fas fa-broadcast-tower"></i>
@@ -413,9 +440,14 @@ permalink: /live/
                   </div>
                 </div>
 
-                <button id="retryStreamBtn" class="btn btn-warning font-weight-bold px-4 py-2" style="border-radius: 50px;">
-                  <i class="fas fa-redo-alt mr-2"></i> Recheck Stream Status
-                </button>
+                <div class="d-flex flex-wrap justify-content-center" style="gap: 10px;">
+                  <button id="playPastStreamsBtn" class="btn btn-info font-weight-bold px-4 py-2" style="border-radius: 50px;">
+                    <i class="fas fa-play-circle mr-2"></i> Watch Past Streams
+                  </button>
+                  <button id="retryStreamBtn" class="btn btn-warning font-weight-bold px-4 py-2" style="border-radius: 50px;">
+                    <i class="fas fa-redo-alt mr-2"></i> Recheck Stream Status
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -499,8 +531,12 @@ permalink: /live/
   (function() {
     const video = document.getElementById('video');
     const streamUrl = 'https://myhlsfiledrop.blob.core.windows.net/hls/stream.m3u8';
+    const playlistUrl = 'https://myhlsfiledrop.blob.core.windows.net/hls/playlist.m3u8';
     const offlineOverlay = document.getElementById('offlineOverlay');
     const retryBtn = document.getElementById('retryStreamBtn');
+    const playPastStreamsBtn = document.getElementById('playPastStreamsBtn');
+    const liveAlertBanner = document.getElementById('liveAlertBanner');
+    const switchToLiveBtn = document.getElementById('switchToLiveBtn');
     const shareBtn = document.getElementById('shareLiveBtn');
     const statusBadge = document.getElementById('liveStatusBadge');
     const statusText = document.getElementById('statusText');
@@ -510,9 +546,12 @@ permalink: /live/
     let countdownInterval = null;
     let eventsData = [];
     let currentFilter = 'upcoming';
+    let isPlayingPastStreams = false;
 
     // Stream Status Handlers
     function showOfflineState() {
+      isPlayingPastStreams = false;
+      if (liveAlertBanner) liveAlertBanner.style.display = 'none';
       if (offlineOverlay) offlineOverlay.style.display = 'flex';
       if (statusBadge) {
         statusBadge.style.backgroundColor = '#6c757d';
@@ -522,12 +561,24 @@ permalink: /live/
     }
 
     function showLiveState() {
+      isPlayingPastStreams = false;
+      if (liveAlertBanner) liveAlertBanner.style.display = 'none';
       if (offlineOverlay) offlineOverlay.style.display = 'none';
       if (statusBadge) {
         statusBadge.style.backgroundColor = '#dc3545';
         statusBadge.style.boxShadow = '0 0 15px rgba(220, 53, 69, 0.6)';
       }
       if (statusText) statusText.textContent = 'LIVE NOW';
+    }
+
+    function showPastStreamsState() {
+      isPlayingPastStreams = true;
+      if (offlineOverlay) offlineOverlay.style.display = 'none';
+      if (statusBadge) {
+        statusBadge.style.backgroundColor = '#17a2b8';
+        statusBadge.style.boxShadow = '0 0 15px rgba(23, 162, 184, 0.6)';
+      }
+      if (statusText) statusText.textContent = 'PAST STREAMS';
     }
 
     function stopPlayerAndShowOffline() {
@@ -560,25 +611,40 @@ permalink: /live/
         })
         .then(function(manifestText) {
           if (manifestText.includes('#EXT-X-ENDLIST')) {
-            stopPlayerAndShowOffline();
-            scheduleNextCheck();
-          } else {
-            if (pollTimer) {
-              clearTimeout(pollTimer);
-              pollTimer = null;
+            if (isPlayingPastStreams) {
+              if (liveAlertBanner) liveAlertBanner.style.display = 'none';
+              scheduleNextCheck();
+            } else {
+              stopPlayerAndShowOffline();
+              scheduleNextCheck();
             }
-            showLiveState();
-            initPlayer();
+          } else {
+            if (isPlayingPastStreams) {
+              if (liveAlertBanner) liveAlertBanner.style.display = 'flex';
+              scheduleNextCheck();
+            } else {
+              if (pollTimer) {
+                clearTimeout(pollTimer);
+                pollTimer = null;
+              }
+              showLiveState();
+              initPlayer(streamUrl);
+            }
           }
         })
         .catch(function(err) {
           console.warn('Error checking stream manifest:', err);
-          stopPlayerAndShowOffline();
-          scheduleNextCheck();
+          if (isPlayingPastStreams) {
+            if (liveAlertBanner) liveAlertBanner.style.display = 'none';
+            scheduleNextCheck();
+          } else {
+            stopPlayerAndShowOffline();
+            scheduleNextCheck();
+          }
         });
     }
 
-    function initPlayer() {
+    function initPlayer(targetUrl = streamUrl) {
       if (Hls.isSupported()) {
         if (hls) {
           hls.destroy();
@@ -587,7 +653,7 @@ permalink: /live/
           manifestLoadingTimeOut: 10000,
           manifestLoadingMaxRetry: 3
         });
-        hls.loadSource(streamUrl);
+        hls.loadSource(targetUrl);
         hls.attachMedia(video);
 
         hls.on(Hls.Events.MANIFEST_PARSED, function() {
@@ -618,7 +684,7 @@ permalink: /live/
         });
 
       } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        video.src = streamUrl;
+        video.src = targetUrl;
         video.addEventListener('loadedmetadata', function() {
           video.play().catch(function(err) {
             console.log('Autoplay blocked:', err);
@@ -989,15 +1055,48 @@ permalink: /live/
       userTzEl.textContent = getUserTimezoneName() || 'Local Time';
     }
 
+    // Expose for testing/debugging
+    window.checkLiveStatusAndInit = checkLiveStatusAndInit;
+
     // Check status and initialize player
     checkLiveStatusAndInit();
 
     // Fetch and render schedule
     fetchAndRenderEvents();
 
+    // Video ended Handler
+    if (video) {
+      video.addEventListener('ended', function() {
+        if (isPlayingPastStreams) {
+          stopPlayerAndShowOffline();
+          scheduleNextCheck();
+        }
+      });
+    }
+
+    // Play Past Streams Handler
+    if (playPastStreamsBtn) {
+      playPastStreamsBtn.addEventListener('click', function() {
+        showPastStreamsState();
+        initPlayer(playlistUrl);
+        scheduleNextCheck();
+      });
+    }
+
+    // Switch To Live Handler
+    if (switchToLiveBtn) {
+      switchToLiveBtn.addEventListener('click', function() {
+        isPlayingPastStreams = false;
+        if (liveAlertBanner) liveAlertBanner.style.display = 'none';
+        checkLiveStatusAndInit();
+      });
+    }
+
     // Retry Button Handler
     if (retryBtn) {
       retryBtn.addEventListener('click', function() {
+        isPlayingPastStreams = false;
+        if (liveAlertBanner) liveAlertBanner.style.display = 'none';
         checkLiveStatusAndInit();
       });
     }
