@@ -167,4 +167,116 @@ stream4.ts`
     await expect(page.locator('#statusText')).toHaveText('LIVE NOW');
     await expect(page.locator('#offlineOverlay')).not.toBeVisible();
   });
+
+  test('should allow playing past streams using playlist.m3u8 when stream is offline', async ({ page }) => {
+    await page.route('**/*.ts*', route => {
+      route.fulfill({
+        status: 200,
+        contentType: 'video/mp2t',
+        body: Buffer.from([0x47, 0x40, 0x00, 0x10])
+      });
+    });
+
+    // Intercept stream.m3u8 to return offline manifest
+    await page.route('**/stream.m3u8*', route => {
+      route.fulfill({
+        status: 200,
+        contentType: 'application/x-mpegURL',
+        body: `#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-TARGETDURATION:4
+#EXT-X-MEDIA-SEQUENCE:4
+#EXTINF:4.167000,
+stream4.ts
+#EXT-X-ENDLIST`
+      });
+    });
+
+    let playlistRequested = false;
+    await page.route('**/playlist.m3u8*', route => {
+      playlistRequested = true;
+      route.fulfill({
+        status: 200,
+        contentType: 'application/x-mpegURL',
+        body: `#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-TARGETDURATION:10
+#EXTINF:10.0,
+past1.ts
+#EXT-X-ENDLIST`
+      });
+    });
+
+    await page.goto('/live/');
+
+    await expect(page.locator('#statusText')).toHaveText('OFFLINE');
+    await expect(page.locator('#playPastStreamsBtn')).toBeVisible();
+
+    await page.locator('#playPastStreamsBtn').click();
+
+    await expect(page.locator('#offlineOverlay')).not.toBeVisible();
+    await expect(page.locator('#statusText')).toHaveText('PAST STREAMS');
+    expect(playlistRequested).toBe(true);
+  });
+
+  test('should display live alert banner when stream goes live during past stream playback', async ({ page }) => {
+    let isLive = false;
+
+    await page.route('**/*.ts*', route => {
+      route.fulfill({
+        status: 200,
+        contentType: 'video/mp2t',
+        body: Buffer.from([0x47, 0x40, 0x00, 0x10])
+      });
+    });
+
+    await page.route('**/stream.m3u8*', route => {
+      route.fulfill({
+        status: 200,
+        contentType: 'application/x-mpegURL',
+        body: isLive ? `#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-TARGETDURATION:4
+#EXTINF:4.0,
+live.ts` : `#EXTM3U
+#EXT-X-ENDLIST`
+      });
+    });
+
+    await page.route('**/playlist.m3u8*', route => {
+      route.fulfill({
+        status: 200,
+        contentType: 'application/x-mpegURL',
+        body: `#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-TARGETDURATION:10
+#EXTINF:10.0,
+past.ts
+#EXT-X-ENDLIST`
+      });
+    });
+
+    await page.goto('/live/');
+    await expect(page.locator('#statusText')).toHaveText('OFFLINE');
+
+    await page.locator('#playPastStreamsBtn').click();
+    await expect(page.locator('#statusText')).toHaveText('PAST STREAMS');
+
+    // Live stream goes live
+    isLive = true;
+
+    // Trigger status check via retry or polling
+    await page.evaluate(() => {
+      if (window.checkLiveStatusAndInit) {
+        window.checkLiveStatusAndInit();
+      }
+    });
+
+    await expect(page.locator('#liveAlertBanner')).toBeVisible();
+    await expect(page.locator('#switchToLiveBtn')).toBeVisible();
+
+    await page.locator('#switchToLiveBtn').click();
+    await expect(page.locator('#statusText')).toHaveText('LIVE NOW');
+    await expect(page.locator('#liveAlertBanner')).not.toBeVisible();
+  });
 });
