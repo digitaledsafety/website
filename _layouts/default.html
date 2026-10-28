@@ -9,8 +9,6 @@
 
 	  {% include footer.html %}
 
-	  <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.7.4-rc.1/web3.min.js"></script>
-
 	  <!-- Bootstrap core JavaScript -->
 	  <script src="/assets/js/jquery.min.js"></script>
 	  <script src="/assets/js/bootstrap.bundle.min.js"></script>
@@ -23,16 +21,13 @@
 
       <!-- Event snippet for Submit lead form conversion page --> 
       <script>
-	  ['sendMessageButtonFoot', 'sendMessageButtonMc'].forEach(function(id) {
+	  ['sendMessageButtonFoot', 'sendMessageButtonMc', 'paypalDonate'].forEach(function(id) {
 	    const btn = document.getElementById(id);
 	    if (btn) {
 	      btn.addEventListener('click', function() {
 	        gtag('event', 'conversion', {'send_to': "{{ site.ads.google }}/oNtiCNf78sAaEJfMq48_"});
 	      });
 	    }
-	  });
-	  document.getElementById('paypalDonate').addEventListener('click', function() {
-	    gtag('event', 'conversion', {'send_to': "{{ site.ads.google }}/oNtiCNf78sAaEJfMq48_"});
 	  });
 	  </script>
 

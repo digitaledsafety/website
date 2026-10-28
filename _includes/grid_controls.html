@@ -1,0 +1,45 @@
+{% assign ui_data = site.data.sitetext[site.locale].marketplace_ui %}
+{% assign grid_id = include.id | default: "grid" %}
+
+<div class="row mb-4">
+  <div class="col-md-6 mt-3">
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text"><i class="fas fa-search"></i></span>
+      </div>
+      <input type="text" id="{{ grid_id }}-search" class="form-control" placeholder="{{ ui_data.search_placeholder | default: "Search..." }}" aria-label="{{ ui_data.search_placeholder | default: "Search" }}">
+    </div>
+  </div>
+
+  <div class="col-md-3 mt-3">
+    <select id="{{ grid_id }}-filter" class="form-control" aria-label="{{ ui_data.filter_label | default: "Filter by Service" }}">
+      <option value="all">{{ ui_data.all_label | default: "All Services" }}</option>
+      {% if include.filter_options %}
+        {% for option in include.filter_options %}
+          <option value="{{ option }}">{{ option }}</option>
+        {% endfor %}
+      {% endif %}
+    </select>
+  </div>
+
+  <div class="col-md-3 mt-3">
+    <select id="{{ grid_id }}-sort" class="form-control" aria-label="Sort options">
+      <option value="recent">{{ ui_data.sort_recent | default: "Recently Added" }}</option>
+      <option value="alpha">{{ ui_data.sort_alpha | default: "Alphabetical" }}</option>
+    </select>
+  </div>
+</div>
+
+<div class="row mb-4">
+  <div class="col-12 text-right">
+    <button id="{{ grid_id }}-clear" class="btn btn-sm btn-outline-secondary" style="border-radius: 20px; font-size: 0.75rem;" aria-label="{{ ui_data.clear_filters_aria | default: 'Clear all search and filter criteria' }}">
+      <i class="fas fa-times-circle mr-1"></i> {{ ui_data.clear_filters | default: 'Clear Filters' }}
+    </button>
+  </div>
+</div>
+
+<div id="{{ grid_id }}-no-results" role="status" style="display: none;">
+  <div class="text-center p-5 bg-light rounded">
+    <p class="text-muted mb-0">{{ ui_data.no_results | default: "No results found matching your search." }}</p>
+  </div>
+</div>

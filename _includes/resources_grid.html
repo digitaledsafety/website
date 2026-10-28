@@ -2,114 +2,41 @@
 {% assign posts = site.resources | where_exp: "resource", "resource.categories contains filter" %}
 
 <script>
-    // Example array of JavaScript objects representing card
-    const cardData = {{ posts | jsonify }};
-  </script>
+    window.cardData = {{ posts | jsonify }};
+    window.defaultFilter = 'all';
 
-  <div class="row">
-      <!-- Filters -->
-      <div class="col-md-12">
-        <div class="btn-group">
-            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                <i class="fa fa-filter"></i> Filter by:
-              <span class="caret"></span>
-            </a>
-            <ul id="card-filters" class="dropdown-menu">
-
-              <!-- dropdown menu links -->
-            </ul>
-          </div>
-          <!-- Add more filters as needed -->
-      </div>
-    </div>
-<div class="row">
-      <!-- List of Cards -->
-      <div class="col-md-12">
-          <div class="row" id="card-container">
-              <!-- Cards will be dynamically populated here -->
-          </div>
-      </div>
-    </div>
-
-
-<!-- Add Bootstrap JS and jQuery for checkbox filtering -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<script>
-  // Function to populate cards
-  function populateCards() {
-    const cardFiltersContainer = document.getElementById('card-filters');
-    cardFiltersContainer.innerHTML = '';
-    const fs = [];
-      cardData.forEach(cardObj => {
-        cardObj.tags.forEach(cardTag => {
-            if(!fs.includes(cardTag)) {
-                fs.push(cardTag);
-            }
-        })
-      });
-
-      fs.forEach(f => {
-        const isChecked = (f == 'all' ? 'checked' : '');
-        const filterHtml = `
-        <li class="pl-2"><div class="form-check">
-            <input type="checkbox" ${isChecked} class="form-check-input" id="${f}">
-            <label class="form-check-label" for="${f}">${f}</label>
-        </div></li>
-          `;
-          cardFiltersContainer.innerHTML += filterHtml;
-      });
-
-    const cardContainer = document.getElementById('card-container');
-      cardContainer.innerHTML = '';
-      cardData.forEach(cardObj => {
-          const cardHtml = `
-              <div class="col-md-4 mb-3 filterable-card" data-filters="${cardObj.tags.join(',')}">
-                  <div class="card">
-                    <img class="card-img-top img-fluid" src=${cardObj.image} alt="">
-                      <div class="card-body">
-                          <h5 class="card-title">${cardObj.title}</h5>
-                          <p class="card-text">${cardObj.subtitle}</p>
-                          <a href=${cardObj.link} target="_blank" class="btn btn-primary stretched-link">View</a>
-                      </div>
-                  </div>
-              </div>
-          `;
-          cardContainer.innerHTML += cardHtml;
-      });
-  }
-
-  // Function to filter cards based on checkboxes
-  function filterCards() {
-      const selectedFilters = [];
-      // Get all selected filters
-      $('input[type="checkbox"]:checked').each(function () {
-          selectedFilters.push($(this).attr('id'));
-      });
-
-      // Show/hide cards based on selected filters
-      $('.filterable-card').each(function () {
-          const card = $(this);
-          const filters = card.data('filters').split(',');
-          const showCard = filters.some(filter => selectedFilters.includes(filter));
-          card.toggleClass('d-none', !showCard);
-      });
-  }
-
-  // Initialize filtering on page load and when checkboxes change
-  $(document).ready(function () {   
-      populateCards();
-
-      $('input[type="checkbox"]').change(filterCards);      
-
-      filterCards();
-  });
+    function renderGrid(data, container) {
+        renderGridShared(data, container, {
+            border: false,
+            externalLinks: true,
+            stretchedLink: true,
+            getImageUrl: (item) => item.image,
+            getLinkUrl: (item) => item.link,
+            getDescription: (item) => item.subtitle,
+            mutedDescription: true,
+            viewDetailsText: {{ site.data.sitetext[site.locale].collection_ui.view_details | default: "View Details" | jsonify }}
+        });
+    }
 </script>
 
+{% include render_grid_script.html %}
 
+{% assign all_tags = "" | split: "," %}
+{% for post in posts %}
+  {% if post.tags %}
+    {% for tag in post.tags %}
+      {% unless all_tags contains tag %}
+        {% assign all_tags = all_tags | push: tag %}
+      {% endunless %}
+    {% endfor %}
+  {% endif %}
+{% endfor %}
+{% assign sorted_tags = all_tags | sort %}
 
+{% include grid_controls.html id="resources" filter_options=sorted_tags %}
 
+<div class="row" id="resources-container" role="list">
+    <!-- Cards will be dynamically populated here -->
+</div>
 
-
-
-
+{% include grid_script.html id="resources" data_var="cardData" %}

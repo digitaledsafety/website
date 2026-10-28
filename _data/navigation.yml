@@ -14,13 +14,11 @@ en: &DEFAULT_EN
     - title: "+1-833-692-5477"
       url: "tel:+18336925477"
     - title: "Our Work"
-      url: /#services    
+      url: /#marketplace
     - title: "Contact"
-      url: /#contact      
-    - title: "Organizations"
-      url: /organizations/
+      url: /#contact
     - title: "Store"
-      url: /store           
+      url: /store
 en-US:
   <<: *DEFAULT_EN
 en-CA:
@@ -36,14 +34,12 @@ es: &DEFAULT_ES
   nav:
     - title: "+1-833-692-5477"
       url: "tel:+18336925477"  
-    - title: "Servicios"
-      url: /#servicios
+    - title: "Nuestro Trabajo"
+      url: /#marketplace
     - title: "Contáctenos"
-      url: /#contacto      
-    - title: "Organizaciones"
-      url: /organizations/
-    - title: "Stôr"
-      section: /store
+      url: /#contacto
+    - title: "Tienda"
+      url: /store
 es-ES:
   <<: *DEFAULT_ES
 es-CO:

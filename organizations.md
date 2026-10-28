@@ -2,7 +2,7 @@
 layout: organizations
 title: Organizations
 image: /assets/img/header-bg.jpg
-description: "A directory of organizations dedicated to STEM education, digital safety, and technology standards."
+description: "Connect with the leaders in STEM education and digital advocacy. Our directory features organizations committed to technological standards, safety education, and social empowerment."
 ---
 
 <div class="col-lg-12 text-center">

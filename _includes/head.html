@@ -1,8 +1,8 @@
 <head>
     <!-- Start cookieyes banner --> <script id="cookieyes" type="text/javascript" src="https://cdn-cookieyes.com/client_data/e5d1aa43b83c5e02146aee24/script.js"></script> <!-- End cookieyes banner -->
-    {% if site.analytics.google %}
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.analytics.google }}"></script>
+    {% if site.analytics.google or site.ads.google %}
+    <!-- Global site tag (gtag.js) - Google Analytics & Ads -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.analytics.google | default: site.ads.google }}"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
@@ -10,10 +10,14 @@
       }
       gtag("js", new Date());
   
+      {% if site.analytics.google %}
       gtag("config", "{{ site.analytics.google }}");
+      {% endif %}
+      {% if site.ads.google %}
       gtag("config", "{{ site.ads.google }}");
+      {% endif %}
     </script>
-    <!-- End Google Analytics -->
+    <!-- End Google Analytics & Ads -->
     <!-- Event snippet for Page view conversion page
     In your html page, add the snippet and call gtag_report_conversion when someone clicks on the chosen link or button. -->
     <script>
@@ -82,6 +86,50 @@
     height: 200px;
     object-fit: cover;
     }
+
+    .grid-card-hover {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .grid-card-hover:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+    }
+
+    @media (max-width: 991px) {
+      .navbar > .container {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .navbar-brand {
+        flex-shrink: 1;
+        margin-right: 0;
+      }
+      .navbar-toggler {
+        flex-shrink: 0;
+      }
+      /* Ensure the collapse still takes full width when expanded */
+      .navbar-collapse {
+        flex-basis: 100%;
+      }
+    }
+
+    .meta-badge {
+      font-size: 0.8rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      margin: 0 5px 10px;
+      display: inline-block;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .badge-service { background: #fed136; color: #fff; }
+    .badge-platform { background: #e9ecef; color: #495057; }
+    .badge-category { background: #6c757d; color: #fff; }
+    .badge-program { background: #17a2b8; color: #fff; }
+    .cover-container { max-width: 800px; }
 
     </style>
     <!-- Page container change top padding when nav shrinks -->
