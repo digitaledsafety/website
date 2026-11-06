@@ -12,9 +12,9 @@ The Digital Education & Safety Foundation is a non-profit organization dedicated
 
 ## Our Core Services
 
-- **Entrepreneurship**: We teach how to build products using entrepreneurship principles—from gathering requirements and development to marketing within the community.
-- **Engineering**: We facilitate collaboration on hands-on projects involving robotics, microcontrollers, 3D printing, and more, guided by experienced hobbyists.
-- **Digital Safety**: Leveraging over a decade of experience, we advocate for and educate the community on safe and responsible online activities.
+- **Entrepreneurship**: We share educational content and resources on building digital products using entrepreneurship principles—from requirement gathering and development to marketing within the community.
+- **Engineering**: We provide engaging digital content, open-source tools, and interactive guides covering robotics, microcontrollers, and software development.
+- **Digital Safety**: Leveraging over a decade of experience, we advocate for and educate the community on safe and responsible online activities through digital guides and resources.
 
 ## Marketplace & Programs
 
