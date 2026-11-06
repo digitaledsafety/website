@@ -2,11 +2,11 @@
 title: Grok
 homepage: https://x.ai/blog/grok-os
 contribute: https://vscode.dev/github/xai-org/grok-1
-image: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvwGLjIYF5J3EJzmKaKFjLzLnCQl5fmrwoIA&s
+image: /assets/img/opensource/grok.png
 tags: [X]
 
 caption:
-  thumbnail: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvwGLjIYF5J3EJzmKaKFjLzLnCQl5fmrwoIA&s
+  thumbnail: /assets/img/opensource/grok.png
 ---
 
 Grok-1 is a 314 billion parameter Mixture-of-Experts model trained from scratch by xAI.

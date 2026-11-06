@@ -1,12 +1,12 @@
 ---
-title: "Association for Women in Science (AWIS)"
-homepage: https://awis.org
-donation_url: https://awis.org
+title: "AWIS"
+homepage: https://www.awis.org
+donation_url: https://www.awis.org/donate/
 image: /assets/img/header-bg.jpg
-tags: ["organization"]
+tags: ["Women in STEM", "Advocacy", "Equity"]
 
 caption:
   thumbnail: /assets/img/header-bg.jpg
 ---
 
-Supporting STEM education and innovation.
+AWIS empowers underserved women in STEM by providing a modern advocacy platform and professional community that champions equitable representation and career growth.

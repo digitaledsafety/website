@@ -1,12 +1,12 @@
 ---
-title: "New Jersey Tutoring Corps Inc"
+title: "NJ Tutoring Corps"
 homepage: https://njtutoringcorps.org
-donation_url: https://njtutoringcorps.org
+donation_url: https://njtutoringcorps.org/donate/
 image: /assets/img/header-bg.jpg
-tags: ["organization"]
+tags: ["Tutoring", "NJ", "K-12"]
 
 caption:
   thumbnail: /assets/img/header-bg.jpg
 ---
 
-Supporting STEM education and innovation.
+The New Jersey Tutoring Corps empowers underserved students in New Jersey by providing high-impact tutoring that builds modern math and science foundations.

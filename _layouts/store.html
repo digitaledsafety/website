@@ -13,6 +13,18 @@ layout: default
     </div>
   </header>
 
+<style>
+  .card-img-top {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+  }
+
+  .text-primary {
+    color: #fed136 !important; /* Theme primary color usually */
+  }
+</style>
+
 {% if page.background == "grey" or page.background == "gray" %}
 <script>
 document.getElementById("page-top").className="bg-light";
@@ -21,37 +33,49 @@ document.getElementById("page-top").className="bg-light";
 
 
 <div class="container py-5" id="pagecontainer">
+    <h2 class="mb-4 text-center">Shop with Purpose</h2>
+    <p class="lead text-center mb-5">Welcome to The Digital Education & Safety Foundation Store—where every purchase fuels our mission. We are a gateway to positive change, providing the resources needed to empower underserved communities with modern STEM education.</p>
 
-  <h2>Welcome!</h2>
-  <p>Welcome to The Digital Education & Safety Foundation Store – Where Every Purchase Creates a World of Difference!</p>
-
-  </p>
-    We are more than just an online store; we are a gateway to positive change. We invite you to step into a world where your every purchase becomes an opportunity to make a meaningful impact in STEM/STEAM. Here, you'll find a carefully curated collection of products that are not only beautifully crafted but are also a testament to our shared commitment to creating a better world. With every item you choose, you are actively contributing to our mission, and together, we are building a brighter, more compassionate future. Thank you for being a part of our community of change-makers, and welcome to a store with a purpose!
-  </p>
+    <div class="row mb-5">
+        <div class="col-md-4 text-center">
+            <i class="fas fa-heart fa-2x text-primary mb-3"></i>
+            <h6>Direct Impact</h6>
+            <p class="small text-muted">100% of proceeds go directly toward developing free educational resources and safety programs.</p>
+        </div>
+        <div class="col-md-4 text-center">
+            <i class="fas fa-graduation-cap fa-2x text-primary mb-3"></i>
+            <h6>STEM Advocacy</h6>
+            <p class="small text-muted">Your support helps us bridge the digital divide and prepare students for technical careers.</p>
+        </div>
+        <div class="col-md-4 text-center">
+            <i class="fas fa-globe fa-2x text-primary mb-3"></i>
+            <h6>Community Driven</h6>
+            <p class="small text-muted">Join a global network of change-makers committed to a more equitable and safe digital future.</p>
+        </div>
+    </div>
+<!-- PayPal SDK -->
+{% include embed/paypal_sdk.html %}
 
 <!-- Product Grid -->
-{% if site.locale and site.locale != "" and site.locale != nil %}
-  
-    <div class="row">
-	{% for product in site.products %}
-      <div class="col-md-4 col-sm-6 portfolio-item">
-        {{ product.content }}
+<div class="row">
+{% for product in site.products %}
+  <div class="col-md-6 col-lg-4 mb-4">
+    <div class="card h-100 shadow-sm border-0 grid-card-hover">
+      {% if product.image %}
+      <img class="card-img-top" src="{{ product.image }}" alt="{{ product.title }}">
+      {% endif %}
+      <div class="card-body">
+        <h4 class="card-title">{{ product.title }}</h4>
+        <h5 class="text-muted mb-3">{{ site.paypal_currency | default: 'USD' }} {{ product.price }}</h5>
+        <p class="card-text">{{ product.description }}</p>
       </div>
-	{% endfor %}
-    </div>
-  
-
-{% else %}
-  
-    <div class="row">
-	{% for product in site.products %}
-      <div class="col-md-4 col-sm-6 portfolio-item">
-        {{ product.content }}
+      <div class="card-footer bg-transparent border-top-0 pb-4">
+        {% include embed/paypal_button.html dom_id=forloop.index title=product.title price=product.price %}
       </div>
-	{% endfor %}
     </div>
-  
-{% endif %}
+  </div>
+{% endfor %}
+</div>
 
 </div>
 

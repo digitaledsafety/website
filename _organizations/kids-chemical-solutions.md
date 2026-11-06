@@ -1,12 +1,12 @@
 ---
-title: "Kids Chemical Solutions"
+title: "Kids' Chemical Solutions"
 homepage: https://kidschemicalsolutions.com
 donation_url: https://kidschemicalsolutions.com
 image: /assets/img/header-bg.jpg
-tags: ["organization"]
+tags: ["Chemistry", "Elementary", "Comic Books"]
 
 caption:
   thumbnail: /assets/img/header-bg.jpg
 ---
 
-Supporting STEM education and innovation.
+Kids' Chemical Solutions empowers underserved elementary students by using engaging, comic-based curricula to demystify modern chemistry and build early scientific confidence.

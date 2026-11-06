@@ -1,12 +1,12 @@
 ---
-title: "Partnerships in Education and Resilience (PEAR)"
+title: "PEAR"
 homepage: https://www.pearinc.org
 donation_url: https://www.pearinc.org
 image: /assets/img/header-bg.jpg
-tags: ["organization"]
+tags: ["Social-Emotional", "Resilience", "STEM Learning"]
 
 caption:
   thumbnail: /assets/img/header-bg.jpg
 ---
 
-Supporting STEM education and innovation.
+PEAR empowers underserved youth by integrating social-emotional development with modern STEM learning to build the resilience and interest needed for technical success.

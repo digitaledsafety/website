@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="{{ site.locale | slice: 0,2 | default: "en" }}">
+  {% include head.html %}
+  <body class="text-center">
+    {% assign ui_data = site.data.sitetext[site.locale].marketplace_ui %}
+    {% include embed/paypal_sdk.html %}
+    {% include donation_modal.html %}
+
+    <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+      <header class="masthead mb-auto">
+        <div class="inner">
+          <h3 class="masthead-brand">{{ page.title }}</h3>
+          <nav class="nav nav-masthead justify-content-center">
+            <a class="nav-link active" href="{{ '/' | relative_url }}">Home</a>
+            <a class="nav-link" href="{{ '/marketplace' | relative_url }}">Marketplace</a>
+          </nav>
+        </div>
+      </header>
+
+      <main role="main" class="inner cover">
+        <img src="{{ page.image }}" class="img-fluid rounded mb-4" style="max-height: 300px;" alt="{{ page.title }}">
+        <h1 class="cover-heading">{{ page.title }}</h1>
+
+        <div class="mb-4">
+          {% if page.service %}
+            <span class="meta-badge badge-service">
+              <i class="fas fa-concierge-bell mr-1"></i> {{ page.service }}
+            </span>
+          {% endif %}
+          {% if page.platform %}
+            <span class="meta-badge badge-platform">
+              <i class="fas fa-laptop mr-1"></i> {{ page.platform }}
+            </span>
+          {% endif %}
+          {% if page.categories %}
+            {% assign categories = page.categories | join: ", " %}
+            <span class="meta-badge badge-category">
+              <i class="fas fa-tag mr-1"></i> {{ categories | default: page.categories }}
+            </span>
+          {% endif %}
+        </div>
+
+        <p class="lead">{{ page.subtitle }}</p>
+
+        {% if page.program %}
+          {% assign program_item = nil %}
+          {% for p in site.programs %}
+            {% assign pid = p.id | split: "/" | last | split: "." | first | plus: 0 %}
+            {% if pid == page.program %}
+              {% assign program_item = p %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {% if program_item %}
+            <p class="mb-4">
+              <strong>{{ ui_data.program_label | default: "Program:" }}</strong>
+              <a href="{{ program_item.url | relative_url }}" class="meta-badge badge-program">
+                <i class="fas fa-project-diagram mr-1"></i> {{ program_item.title }}
+              </a>
+            </p>
+          {% endif %}
+        {% endif %}
+
+        <p class="lead">
+          {% if page.platform == 'android' %}
+            <a href="{{ page.link }}" target="_blank" class="btn btn-lg btn-primary">{{ ui_data.download_btn | default: "Download" }}</a>
+          {% elsif page.platform == 'github' %}
+            <a href="{{ page.link }}" target="_blank" class="btn btn-lg btn-primary">{{ ui_data.build_btn | default: "Build" }}</a>
+          {% else %}
+            <a href="javascript:void(0)" onclick="handleLaunch('{{ page.link }}')" class="btn btn-lg btn-primary launch-trigger" data-link="{{ page.link }}">{{ ui_data.launch_btn | default: "Launch" }} {{ ui_data.webapp | default: "Web App" }}</a>
+          {% endif %}
+        </p>
+      </main>
+
+      <footer class="mastfoot mt-auto">
+        <div class="inner">
+          <p>Provided by <a href="https://digitaleducationsafety.org">The Digital Education & Safety Foundation</a>.</p>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

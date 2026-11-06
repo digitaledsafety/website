@@ -1,0 +1,153 @@
+<div id="rss-feed-container" class="row">
+  <div class="col-12 text-center py-5" id="rss-loading">
+    <i class="fas fa-circle-notch fa-spin fa-2x text-primary"></i>
+    <p class="mt-2 text-muted">Loading latest updates...</p>
+  </div>
+</div>
+
+<script>
+(function() {
+  const feedUrl = 'https://api.digitaleducationsafety.org/v1/relay?action=rss&username=digitaledsafety';
+  const container = document.getElementById('rss-feed-container');
+  const loading = document.getElementById('rss-loading');
+
+  function stripHtml(html) {
+    if (!html) return "";
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    return doc.body.textContent || "";
+  }
+
+  fetch(feedUrl)
+    .then(response => {
+      if (!response.ok) throw new Error('Network response was not ok');
+      return response.text();
+    })
+    .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+    .then(data => {
+      if (loading) loading.remove();
+      const allItems = Array.from(data.querySelectorAll("item"));
+
+      // Filter out placeholder posts
+      const filteredItems = allItems.filter(item => {
+        const titleNode = item.querySelector("title");
+        const title = titleNode ? titleNode.textContent : "";
+        return !(title.toLowerCase() === 'new post' || title.toLowerCase() === 'test' || !title.trim());
+      });
+
+      // Limit to 6 items
+      const itemsToDisplay = filteredItems.slice(0, 6);
+
+      if (itemsToDisplay.length === 0) {
+        const noPosts = document.createElement('div');
+        noPosts.className = 'col-12 text-center py-5';
+        noPosts.textContent = 'No recent updates found.';
+        container.appendChild(noPosts);
+        return;
+      }
+
+      itemsToDisplay.forEach(item => {
+        const titleNode = item.querySelector("title");
+        const linkNode = item.querySelector("link");
+        const descNode = item.querySelector("description");
+        const dateNode = item.querySelector("pubDate");
+
+        const title = titleNode ? titleNode.textContent : "Social Media Update";
+        const link = linkNode ? linkNode.textContent : "";
+        const rawDescription = descNode ? descNode.textContent : "";
+        const pubDate = dateNode ? dateNode.textContent : "";
+
+        // Find image or use fallback
+        let imageUrl = '/assets/img/logo.jpg';
+        // Try namespace-aware selection for media:content, fallback to basic tag name
+        const mediaContent = item.getElementsByTagNameNS("*", "content")[0] || item.getElementsByTagName("media:content")[0];
+
+        if (mediaContent && mediaContent.getAttribute("url")) {
+          imageUrl = mediaContent.getAttribute("url");
+        } else {
+          // Try to find image in description before stripping HTML
+          const imgMatch = rawDescription.match(/<img[^>]+src="([^">]+)"/);
+          if (imgMatch) imageUrl = imgMatch[1];
+        }
+
+        // Clean description (strip HTML tags)
+        const cleanDescription = stripHtml(rawDescription);
+
+        const col = document.createElement('div');
+        col.className = 'col-md-6 col-lg-4 mb-4';
+
+        const card = document.createElement('div');
+        card.className = 'card h-100 shadow-sm border-0 grid-card-hover rss-card';
+        card.style.borderRadius = '15px';
+        card.style.overflow = 'hidden';
+
+        const img = document.createElement('img');
+        img.className = 'card-img-top';
+        img.src = imageUrl;
+        img.alt = title;
+        img.style.height = '200px';
+        img.style.objectFit = 'cover';
+        card.appendChild(img);
+
+        const cardBody = document.createElement('div');
+        cardBody.className = 'card-body d-flex flex-column';
+
+        const cardTitle = document.createElement('h5');
+        cardTitle.className = 'card-title';
+        cardTitle.style.fontWeight = '700';
+        cardTitle.style.fontSize = '1.1rem';
+        cardTitle.textContent = title;
+
+        const dateText = document.createElement('p');
+        dateText.className = 'text-muted small mb-2';
+        try {
+          const date = new Date(pubDate);
+          if (!isNaN(date.getTime())) {
+            dateText.textContent = date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+          } else {
+            dateText.textContent = pubDate;
+          }
+        } catch (e) {
+          dateText.textContent = pubDate;
+        }
+
+        const cardText = document.createElement('p');
+        cardText.className = 'card-text text-muted';
+        cardText.style.fontSize = '0.9rem';
+        cardText.style.flexGrow = '1';
+
+        // Simple text truncation for clean grid
+        const maxLength = 160;
+        cardText.textContent = cleanDescription.length > maxLength ? cleanDescription.substring(0, maxLength) + '...' : cleanDescription;
+
+        cardBody.appendChild(cardTitle);
+        cardBody.appendChild(dateText);
+        cardBody.appendChild(cardText);
+
+        if (link && link.trim() !== "") {
+          const actionBtn = document.createElement('a');
+          actionBtn.className = 'btn btn-outline-primary btn-sm mt-3 align-self-start';
+          actionBtn.style.borderRadius = '20px';
+          actionBtn.textContent = 'View Post';
+          actionBtn.href = link;
+          actionBtn.target = '_blank';
+          actionBtn.rel = 'noopener noreferrer';
+          cardBody.appendChild(actionBtn);
+        }
+
+        card.appendChild(cardBody);
+        col.appendChild(card);
+        container.appendChild(col);
+      });
+    })
+    .catch(err => {
+      console.error('Error fetching RSS feed:', err);
+      if (loading) {
+        loading.textContent = '';
+        const errorMsg = document.createElement('p');
+        errorMsg.className = 'text-danger';
+        errorMsg.textContent = 'Failed to load social media feed. Please try again later.';
+        loading.appendChild(errorMsg);
+      }
+    });
+})();
+</script>

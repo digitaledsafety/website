@@ -3,3 +3,9 @@ _site
 .jekyll-metadata
 .jekyll-cache
 Gemfile.lock
+node_modules/
+package-lock.json
+playwright-report/
+test-results/
+*.log
+screenshots/
